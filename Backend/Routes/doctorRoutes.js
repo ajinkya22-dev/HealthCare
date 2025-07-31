@@ -1,0 +1,17 @@
+const express = require('express');
+const router = express.Router();
+const { protect } = require('../Middleware/authMiddleware');
+const { getMyPatients, getMyReviews, uploadProfileImage } = require('../Controllers/doctorController');
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, 'uploads/doctor-profiles'),
+    filename: (req, file, cb) => cb(null, `${Date.now()}-${file.originalname}`)
+});
+const upload = multer({ storage });
+
+router.get('/patients', protect, getMyPatients);
+router.get('/reviews', protect, getMyReviews);
+router.post('/upload-image', protect, upload.single('image'), uploadProfileImage);
+
+module.exports = router;
