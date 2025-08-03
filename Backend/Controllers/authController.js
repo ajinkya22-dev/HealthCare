@@ -3,7 +3,7 @@ const User = require('../Models/User');
 const Doctor = require('../Models/Doctor');
 const Patient = require('../Models/Patient');
 const generateToken = require('../utils/generateToken');
-
+// registration
 exports.register = async (req, res) => {
     try {
         const { name, email, password, role, specialization} = req.body;
