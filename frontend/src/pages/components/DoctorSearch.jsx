@@ -2,26 +2,20 @@ import { useState } from "react";
 
 // DoctorSearchForm.jsx
 export default function DoctorSearchForm() {
-  const [name, setName] = useState("");
+  //const [name, setName] = useState("");
   const [speciality, setspeciality] = useState("");
 
   const handlesubmit = async(e)=>{
       e.preventDefault();
   }
   return (
-     <div className="flex justify-center bg-gray-50 mb-0 pb-0  ">       
+     <div  className="flex justify-center bg-gray-50 mb-0 pb-0  ">       
     <div className="bg-white p-6 rounded-lg shadow max-w-5xl mt-25  mx-auto">
       <h2 className="text-xl font-semibold mb-5">Find A Doctor</h2>
       <form onSubmit={(e)=>{
           handlesubmit(e);
         }} className="flex flex-col sm:flex-row items-center gap-10">
-        <input value={name} onChange={(e)=>{
-          setName(e.target.value);
-        }}
-          type="text"
-          placeholder="Name"
-          className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400 w-48"
-        />
+       
         <input value={speciality} onChange={(e)=>{
           setspeciality(e.target.value);
         }}

@@ -1,7 +1,17 @@
+import AOS from "aos";
+import { useEffect } from "react";
+
+
 // ResultsInNumbers.jsx
 export default function ResultsInNumbers() {
+  useEffect(() => {
+  AOS.init({
+    duration: 800, // animation duration
+    once: true     // animate only once
+  });
+}, []);
   return (
-    <div className="bg-gray-50  rounded-lg py-9 ">
+    <div  className="bg-gray-50  rounded-lg py-9 ">
       <h2 className="text-center text-[#179fac] font-semibold text-2xl mb-8">
         Our results in numbers
       </h2>

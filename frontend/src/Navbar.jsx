@@ -1,16 +1,34 @@
 // Navbar.jsx
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
 
 
 
 
 const Navbar = () => {
   const navigate = useNavigate();
+   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  //const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check localStorage token or login flag
+    const token = localStorage.getItem("user");
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
  
   
   return (
-    <nav className="bg-gray-100 py-4 navbar fixed-top">
+    <nav className="bg-gray-100 py-4 navbar fixed top-0 left-0 w-full shadow-md z-50">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
@@ -24,29 +42,59 @@ const Navbar = () => {
 
         {/* Nav Links */}
         <div className="flex items-center space-x-8 mx-15">
-          <a
-            href="/"
-            className="text-black mx-5 font-medium   pb-[2px]"
+         <NavLink
+        to="/"
+        className={({ isActive }) =>
+          "py-2 px-3 font-semibold transition border-b-4" +
+          (isActive
+            ? " border-green-500 text-green-600"
+            : " border-transparent text-gray-800 hover:text-green-500")
+        }
+      >
+        Home
+      </NavLink>
+         <NavLink
+        to="/service"
+        className={({ isActive }) =>
+          "py-2 px-3 font-semibold transition border-b-4" +
+          (isActive
+            ? " border-green-500 text-green-600"
+            : " border-transparent text-gray-800 hover:text-green-500")
+        }
+      >
+        Service
+      </NavLink>
+         <NavLink
+        to="/contact"
+        className={({ isActive }) =>
+          "py-2 px-3 font-semibold transition border-b-4" +
+          (isActive
+            ? " border-green-500 text-green-600"
+            : " border-transparent text-gray-800 hover:text-green-500")
+        }
+      >
+        Contact Us
+      </NavLink>
+           {!isLoggedIn ? (
+          <>
+            <Link to="/register" className="text-green-600 hover:underline">
+              Sign Up
+            </Link>
+            <Link
+              to="/login"
+              className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800"
+            >
+              Log In
+            </Link>
+          </>
+        ) : (
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
           >
-            Home
-          </a>
-          <a href="#" className="text-black font-medium hover:text-teal-700 mx-5">
-            Service
-          </a>
-          <a href="/contactUs" className="text-black font-medium hover:text-teal-700 mr-20">
-            Contact Us
-          </a>
-          <a
-            href="/register"
-            className="text-teal-600 font-medium ml-4 hover:underline"
-          >
-            Sign Up
-          </a>
-          <button  onClick={()=>{
-            navigate("/login")
-          }} className="bg-teal-700 text-white cursor-pointer font-bold rounded-xl px-8  py-2 ml-2">
-            Log In
+            Log Out
           </button>
+        )}
         </div>
       </div>
     </nav>

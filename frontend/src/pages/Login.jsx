@@ -1,14 +1,41 @@
 // Login.jsx
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { dummyDoctors } from "../data/UserDummy";
+import { dummyPatients } from "../data/UserDummy";
 
 export default function Login() {
   const [activeTab, setActiveTab] = useState("patient");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const navigate = useNavigate();
 
-  const handlesubmit = (e)=>{
-            e.preventDefault();
-  }
+  const handlesubmit = (e) => {
+    e.preventDefault();
+    if (activeTab === "doctor") {
+      const doctor = dummyDoctors.find(
+      (doc) => doc.email === email && doc.password === password
+    );
+
+    if (doctor) {
+      localStorage.setItem("user", JSON.stringify(doctor));
+      navigate("/doctorDashboard");
+      return;
+    }
+     
+    } else if (activeTab === "patient") {
+      const patient = dummyPatients.find(
+      (pat) => pat.email === email && pat.password === password
+    );
+
+    if (patient) {
+      localStorage.setItem("user", JSON.stringify(patient));
+      navigate("/");
+      return;
+    }
+     alert("Invalid email or password");
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -43,12 +70,13 @@ export default function Login() {
 
         <form onSubmit={handlesubmit} className="space-y-4">
           <div>
-            <label className="block mb-1 text-sm font-medium">
-              Email or Mobile Number
-            </label>
-            <input value={email} onChange={(e)=>{
-                     setemail(e.target.value);   
-            }}
+            <label className="block mb-1 text-sm font-medium">Email</label>
+            <input
+              required
+              value={email}
+              onChange={(e) => {
+                setemail(e.target.value);
+              }}
               type="text"
               placeholder="Enter email or mobile number"
               className="w-full border border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
@@ -58,26 +86,27 @@ export default function Login() {
           <div>
             <label className="block mb-1 text-sm font-medium">Password</label>
             <div className="relative">
-              <input value={password} onChange={(e)=>{
-                        setpassword(e.target.value);
-              }}
+              <input
+                required
+                value={password}
+                onChange={(e) => {
+                  setpassword(e.target.value);
+                }}
                 type="password"
                 placeholder="Enter your password"
                 className="w-full border border-gray-600 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
               />
-              
             </div>
           </div>
 
           <div className="flex items-center justify-between text-sm">
             <label className="flex items-center">
-              <input type="checkbox" className="mr-2" />
+              <input required type="checkbox" className="mr-2" />
               Remember me
             </label>
-            
           </div>
 
-          <button 
+          <button
             type="submit"
             className="w-full cursor-pointer bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
           >

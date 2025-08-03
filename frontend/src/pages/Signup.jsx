@@ -64,22 +64,22 @@ export default function Register() {
         <form onSubmit={(e)=>{
           e.preventDefault();
         }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input value={fullname} onChange={(e)=>{
+          <input required value={fullname} onChange={(e)=>{
             setfullname(e.target.value);
             
           }} type="text" placeholder="Full Name" className="input border-gray-600 border-2 rounded-[5px] p-2" />
-          <input value={email} onChange={(e)=>{
+          <input required value={email} onChange={(e)=>{
             setemail(e.target.value);
           }} type="email" placeholder="Email" className="input border-gray-600 border-2 rounded-[5px] p-2" />
-          <input value={password} onChange={(e)=>{
+          <input required value={password} onChange={(e)=>{
             setpassword(e.target.value);
 
           }} type="password" placeholder="Password" className="input border-gray-600 border-2 rounded-[5px] p-2" />
           <input value={phone} onChange={(e)=>{
             setphone(e.target.value);
           }} type="text" placeholder="Phone Number" className="input border-gray-600 border-2 rounded-[5px] p-2" />
-          <select className="input border-gray-600 border-2 rounded-[5px] p-2">
-            <option value="">Select Gender</option>
+          <select required className="input border-gray-600 border-2 rounded-[5px] p-2">
+            <option  value="">Select Gender</option>
             <option>Male</option>
             <option>Female</option>
             <option>Other</option>
@@ -117,27 +117,27 @@ export default function Register() {
           {/* Doctor Specific Fields */}
           {userType === "doctor" && (
             <>
-              <select className="input border-gray-600 border-2 rounded-[5px] p-2">
+              <select required className="input border-gray-600 border-2 rounded-[5px] p-2">
                 <option value="">Select Specialization</option>
                 <option>Cardiologist</option>
                 <option>Dentist</option>
                 <option>Dermatologist</option>
                 <option>General Physician</option>
               </select>
-              <input value={experience} onChange={(e)=>{
+              <input required value={experience} onChange={(e)=>{
                 setexperience(e.target.value);
               }} type="number" placeholder="Experience (years)" className="input border-gray-600 border-2 rounded-[5px] p-2" />
-              <input value={qualification} onChange={(e)=>{
+              <input required value={qualification} onChange={(e)=>{
                 setqualification(e.target.value);
               }} type="text" placeholder="Qualification" className="input border-gray-600 border-2 rounded-[5px] p-2" />
-              <input value={licenseno} onChange={(e)=>{
+              <input required value={licenseno} onChange={(e)=>{
                 setlicenseno(e.target.value);
               }} type="text" placeholder="Medical License Number" className="input border-gray-600 border-2 rounded-[5px] p-2" />
-              <input value={hospitalname} onChange={(e)=>{
+              <input required value={hospitalname} onChange={(e)=>{
                 sethospitalname(e.target.value);
               }} type="text" placeholder="Clinic/Hospital Name" className="input border-gray-600 border-2 rounded-[5px] p-2" />
               
-              <input value={fee} onChange={(e)=>{
+              <input required value={fee} onChange={(e)=>{
                 setfee(e.target.value);
               }}
                 type="number"
@@ -149,7 +149,7 @@ export default function Register() {
 
           {/* Terms and Conditions */}
           <div className="md:col-span-2 flex items-start gap-2">
-            <input type="checkbox" className="mt-1" />
+            <input required type="checkbox" className="mt-1" />
             <p className="text-sm">
               I agree to the <span className="text-green-600 underline">terms and conditions</span>.
             </p>

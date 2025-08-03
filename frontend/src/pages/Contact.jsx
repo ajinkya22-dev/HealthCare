@@ -1,8 +1,40 @@
 import React from 'react'
 import Navbar from '../Navbar'
 import Footer from '../Footer';
+import { useState } from 'react';
 
 const Contact = () => {
+   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    topic: "",
+    message: "",
+    terms: false,
+  });
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+  const handlesubmit = (e)=>{
+    e.preventDefault();
+    setFormData({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      topic: "",
+      message: "",
+      terms: false,
+    });
+
+
+  }
   return (
     <>
       <Navbar></Navbar>
@@ -18,21 +50,23 @@ const Contact = () => {
       </div>
       {/* Form */}
       <form className="flex flex-col gap-4 max-w-3xl mx-auto"
-        onSubmit={e => { e.preventDefault(); /* Handle submit logic */ }}>
+        onSubmit={ handlesubmit}>
         {/* Name fields */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1">
             <label className="block text-gray-700 text-sm mb-1">First name</label>
-            <input
+            <input value={formData.firstName}
+              onChange={handleChange}
               type="text"
               placeholder="Enter your first name"
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400"
+              className=" text-black w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400"
               required
             />
           </div>
           <div className="flex-1">
             <label className="block text-gray-700 text-sm mb-1">Last name</label>
-            <input
+            <input value={formData.lastName}
+              onChange={handleChange}
               type="text"
               placeholder="Enter your last name"
               className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400"
@@ -46,6 +80,8 @@ const Contact = () => {
             <label className="block text-gray-700 text-sm mb-1">Email</label>
             <input
               type="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Enter your email"
               className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400"
               required
@@ -53,7 +89,8 @@ const Contact = () => {
           </div>
           <div className="flex-1">
             <label className="block text-gray-700 text-sm mb-1">Phone number</label>
-            <input
+            <input  value={formData.phone}
+              onChange={handleChange}
               type="tel"
               placeholder="Enter your phone number"
               className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-teal-400"
@@ -63,7 +100,8 @@ const Contact = () => {
         {/* Topic selection */}
         <div>
           <label className="block text-gray-700 text-sm mb-1">Choose a topic</label>
-          <select
+          <select value={formData.topic}
+            onChange={handleChange}
             className="w-full border border-gray-300 rounded px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-teal-400"
             required
             defaultValue="">
@@ -77,7 +115,8 @@ const Contact = () => {
         {/* Message */}
         <div>
           <label className="block text-gray-700 text-sm mb-1">Message</label>
-          <textarea
+          <textarea   value={formData.message}
+            onChange={handleChange}
             placeholder="Type your message…"
             className="w-full border border-gray-300 rounded px-4 py-2 h-32 resize-none focus:outline-none focus:ring-2 focus:ring-teal-400"
             required
@@ -85,7 +124,8 @@ const Contact = () => {
         </div>
         {/* Terms */}
         <div className="flex items-center gap-2 mt-2">
-          <input
+          <input checked={formData.terms}
+            onChange={handleChange}
             type="checkbox"
             id="terms"
             className="w-4 h-4 text-teal-600 border-gray-300 rounded focus:ring-teal-400 focus:ring-2"
