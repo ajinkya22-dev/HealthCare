@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Signup";
 import Calendar from "./pages/components/Calender";
 import Appointment from "./pages/Appointment";
+import BookDoctorProfile from "./pages/BookDoc";
 //import DoctormobileDashobaord from "./pages/DocMobile";
 
 
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/register" exact element={<Register></Register>}></Route>
         <Route path="/calendar" exact element={<Calendar></Calendar>}></Route>
         <Route path="/appointments" exact element={<Appointment></Appointment>}></Route>
+        <Route path="/bookAppointment" exact element={<BookDoctorProfile></BookDoctorProfile>}></Route>
         {/*<Route path="/doc" exact element={<DoctormobileDashobaord></DoctormobileDashobaord>}></Route>*/}
       </Routes>
     </Router>

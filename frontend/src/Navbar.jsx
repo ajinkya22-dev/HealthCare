@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 //import { useNavigate } from "react-router-dom";
+import Sidebar from "./pages/Sidebar";
 
 
 
@@ -13,6 +14,11 @@ const Navbar = () => {
   const navigate = useNavigate();
    const [isLoggedIn, setIsLoggedIn] = useState(false);
   //const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setSidebarOpen((prev) => !prev);
+  };
 
   useEffect(() => {
     // Check localStorage token or login flag
@@ -88,15 +94,28 @@ const Navbar = () => {
             </Link>
           </>
         ) : (
+          <>
           <button
             onClick={handleLogout}
             className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
           >
             Log Out
           </button>
+
+           <button
+           onClick={toggleSidebar}
+            className=" text-white px-4 py-2 rounded bg-blue-500"
+          >
+           Profile
+          </button>
+
+          </>
+
+          
         )}
         </div>
       </div>
+      <Sidebar show={sidebarOpen} onClose={toggleSidebar} />
     </nav>
   );
 };

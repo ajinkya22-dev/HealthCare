@@ -1,5 +1,8 @@
+import { useNavigate } from "react-router-dom";
+
 // DoctorProfileCard.jsx
 export default function DoctorProfileCard() {
+  const navigate = useNavigate();
   return (
 
    <div className="bg-gray-50  w-full ">
@@ -13,19 +16,20 @@ export default function DoctorProfileCard() {
           Lorem ipsum dolor sit amet consectetur adipiscing elit mattis sit phasellus mollis sit aliquam sit nullam.
         </p>
         <div className="flex gap-5">
-          <button className="bg-[#179fac] cursor-pointer text-white px-7 py-2 rounded-full font-semibold shadow hover:bg-[#147c88] transition">
+          <button onClick={()=>{
+            navigate("/bookAppointment")
+            
+          }} className="bg-[#179fac] cursor-pointer text-white px-7 py-2 rounded-full font-semibold shadow hover:bg-[#147c88] transition">
             Book Now
           </button>
-          <button className="bg-white border cursor-pointer border-[#cfd8dc] text-[#179fac] px-7 py-2 rounded-full font-semibold shadow hover:bg-gray-100 transition">
-            Reviews
-          </button>
+          
         </div>
       </div>
       {/* Profile image section */}
       <div className="flex-shrink-0 mr-100 mt-23">
         <div className="rounded-[40px] overflow-hidden border-[12px] border-black w-64 h-64 flex items-center justify-center">
           <img 
-            src="https://randomuser.me/api/portraits/men/32.jpg"
+            src="https://media.istockphoto.com/id/1161336374/photo/portrait-of-confident-young-medical-doctor-on-blue-background.jpg?s=612x612&w=0&k=20&c=zaa4MFrk76JzFKvn5AcYpsD8S0ePYYX_5wtuugCD3ig="
             alt="Doctor Profile"
             className="object-cover w-full h-full"
           />

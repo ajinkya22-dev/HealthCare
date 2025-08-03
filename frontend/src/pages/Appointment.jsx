@@ -85,28 +85,7 @@ const Appointment = () => {
 
         {/* Time */}
         <div className="mb-6">
-          <label className="block text-sm font-semibold text-gray-700 mb-1">
-            Time *
-          </label>
-          <select
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-            required
-            className="w-full border border-gray-300 rounded px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500"
-          >
-            <option value="">Select Time</option>
-            <option value="10:00 AM">10:00 AM Available</option>
-            <option value="11:00 AM">11:00 AM Available</option>
-            <option value="12:00 PM">12:00 PM Available</option>
-             <option value="1:00 PM">1:00 PM Available</option>
-              <option value="2:00 PM">2:00 PM Available</option>
-               <option value="3:00 PM">3:00 PM Available</option>
-                <option value="4:00 PM">4:00 PM Available</option>
-                 <option value="5:00 PM">5:00 PM Available</option>
-                  <option value="6:00 PM">6:00 PM Available</option>
-
-          </select>
+          
         </div>
 
         {/* Submit Button */}
