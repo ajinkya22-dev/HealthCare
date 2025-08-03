@@ -6,7 +6,7 @@ const generateToken = require('../utils/generateToken');
 // registration
 exports.register = async (req, res) => {
     try {
-        const { name, email, password, role, specialization} = req.body;
+        const { name, email, password,phoneNo, gender,address, role, specialization, profileImage,qualification,experiance,licenceNo,HospitalName,fees} = req.body;
 
         const userExists = await User.findOne({ email });
         // check user exists
@@ -20,12 +20,16 @@ exports.register = async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            role });
+            role ,
+            profileImage,
+            phoneNo,
+            gender,
+            address,});
 
         if (role === 'doctor') {
-            await Doctor.create({ userId: user._id, specialization });
+            await Doctor.create({ userId: user._id, specialization,qualification,experiance,licenceNo,HospitalName,fees});
         } else if (role === 'patient') {
-            await Patient.create({ userId: user._id });
+            await Patient.create({ userId: user._id  });
         }
 
         res.status(201).json({
@@ -33,7 +37,11 @@ exports.register = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
-            token: generateToken(user._id)
+            token: generateToken(user._id),
+            profileImage: user.profileImage,
+            phoneNo: user.phoneNo,
+            gender: user.gender,
+            address: user.address,
         });
     } catch (err) {
         res.status(500).json({ message: err.message });
