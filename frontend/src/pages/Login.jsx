@@ -1,41 +1,51 @@
 // Login.jsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { dummyDoctors } from "../data/UserDummy";
-import { dummyPatients } from "../data/UserDummy";
+import { authAPI } from "../services/api";
 
 export default function Login() {
   const [activeTab, setActiveTab] = useState("patient");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handlesubmit = (e) => {
+  const handlesubmit = async (e) => {
     e.preventDefault();
-    if (activeTab === "doctor") {
-      const doctor = dummyDoctors.find(
-      (doc) => doc.email === email && doc.password === password
-    );
+    setLoading(true);
 
-    if (doctor) {
-      localStorage.setItem("user", JSON.stringify(doctor));
-      navigate("/doctorDashboard");
-      return;
-    }
-     
-    } else if (activeTab === "patient") {
-      const patient = dummyPatients.find(
-      (pat) => pat.email === email && pat.password === password
-    );
+    try {
+      const response = await authAPI.login({
+        email,
+        password,
+      });
 
-    if (patient) {
-      localStorage.setItem("user", JSON.stringify(patient));
-      navigate("/");
-      return;
-    }
-     alert("Invalid email or password");
+      const userData = response.data;
+
+      // Store user in localStorage
+      localStorage.setItem("user", JSON.stringify(userData));
+
+      // Redirect based on role
+      if (userData.role === "doctor") {
+        navigate("/doctorDashboard");
+      } else if (userData.role === "patient") {
+        navigate("/patientDashboard");
+      } else {
+        alert("Unknown role");
+      }
+
+    } catch (err) {
+      console.error(err);
+      if (err.response && err.response.data && err.response.data.message) {
+        alert(err.response.data.message);
+      } else {
+        alert("Login failed. Try again.");
+      }
+    } finally {
+      setLoading(false);
     }
   };
+
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -108,9 +118,10 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full cursor-pointer bg-green-600 text-white py-2 rounded hover:bg-green-700 transition"
+            disabled={loading}
+            className="w-full cursor-pointer bg-green-600 text-white py-2 rounded hover:bg-green-700 transition disabled:bg-gray-400"
           >
-            Sign In
+            {loading ? "Signing In..." : "Sign In"}
           </button>
         </form>
 

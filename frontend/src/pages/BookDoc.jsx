@@ -1,14 +1,25 @@
 import { useState, useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
+import { useLocation, useNavigate } from "react-router-dom";
+import { appointmentAPI } from "../services/api";
 
 export default function BookDoctorProfile() {
   const [dates, setDates] = useState([]);
   const [selectedDate, setSelectedDate] = useState(0);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [doctor, setDoctor] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const timeSlots = ["13:30", "14:00", "14:30", "15:00", "15:30", "16:00"];
+  const timeSlots = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"];
 
   useEffect(() => {
+    // Get doctor data from location state
+    if (location.state?.doctor) {
+      setDoctor(location.state.doctor);
+    }
+
     const today = new Date();
     const upcomingDates = [];
     for (let i = 0; i < 6; i++) {
@@ -17,27 +28,67 @@ export default function BookDoctorProfile() {
       upcomingDates.push({
         day: nextDate.toLocaleDateString("en-US", { weekday: "short" }),
         date: nextDate.getDate(),
+        fullDate: nextDate.toISOString().split('T')[0],
       });
     }
     setDates(upcomingDates);
-  }, []);
+  }, [location.state]);
+
+  const handleBookAppointment = async () => {
+    if (!doctor || !selectedTime) return;
+
+    setLoading(true);
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (!user._id) {
+        alert('Please login to book an appointment');
+        navigate('/login');
+        return;
+      }
+
+      const appointmentData = {
+        doctorId: doctor._id,
+        patientId: user._id,
+        appointmentDate: dates[selectedDate].fullDate,
+        description: `Appointment with Dr. ${doctor.name} on ${dates[selectedDate].day}, ${dates[selectedDate].date} at ${selectedTime}`,
+        time: selectedTime
+      };
+
+      await appointmentAPI.createAppointment(appointmentData);
+      alert('Appointment booked successfully!');
+      navigate('/patientDashboard');
+    } catch (error) {
+      console.error('Error booking appointment:', error);
+      alert('Failed to book appointment. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (!doctor) {
+    return (
+      <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+        <p className="text-center text-gray-600">No doctor selected. Please go back and select a doctor.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       {/* Top Section */}
       <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
         <img
-          src="https://media.istockphoto.com/id/1161336374/photo/portrait-of-confident-young-medical-doctor-on-blue-background.jpg?s=612x612&w=0&k=20&c=zaa4MFrk76JzFKvn5AcYpsD8S0ePYYX_5wtuugCD3ig="
-          alt="Doctor"
+          src={doctor.profileImage || "https://via.placeholder.com/200x250?text=Dr"}
+          alt={`Dr. ${doctor.name}`}
           className="w-48 h-60 object-cover rounded-md"
         />
         <div className="flex-1">
           <h2 className="text-2xl font-semibold flex items-center gap-2">
-            Dr. Richard James <FaCheckCircle className="text-blue-500" />
+            Dr. {doctor.name} <FaCheckCircle className="text-blue-500" />
           </h2>
-          <p className="text-gray-500">MBBS – General Physician</p>
+          <p className="text-gray-500">{doctor.qualification} – {doctor.specialization}</p>
           <span className="inline-block mt-1 px-3 py-1 text-sm bg-gray-200 rounded-full">
-            4 Years
+            {doctor.experiance} Years Experience
           </span>
           <div className="mt-4">
             <h3 className="font-semibold text-gray-700 flex items-center gap-1">
@@ -45,14 +96,14 @@ export default function BookDoctorProfile() {
             </h3>
             <p className="text-sm text-gray-600 mt-1">
             <ul>
-                <li>Clinic Name : Bakchod</li> 
-                <li>License Number : F45IT098</li> 
-                <li>Specialization: Dermatology </li>      
+                <li>Hospital/Clinic: {doctor.HospitalName}</li> 
+                <li>License Number: {doctor.licenceNo}</li> 
+                <li>Specialization: {doctor.specialization}</li>      
             </ul>
             </p>
           </div>
           <p className="mt-4 font-medium text-gray-800">
-            Appointment fee: <span className="font-bold">$50</span>
+            Appointment fee: <span className="font-bold">₹{doctor.fees}</span>
           </p>
         </div>
       </div>
@@ -104,16 +155,10 @@ export default function BookDoctorProfile() {
       <div className="mt-8">
         <button
           className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white font-semibold px-6 py-3 rounded-full transition-all disabled:opacity-50"
-          disabled={selectedTime === null}
-          onClick={() =>
-            alert(
-              `Appointment booked on ${
-                dates[selectedDate].day
-              }, ${dates[selectedDate].date} at ${selectedTime}`
-            )
-          }
+          disabled={selectedTime === null || loading}
+          onClick={handleBookAppointment}
         >
-          Book an appointment
+          {loading ? "Booking..." : "Book an appointment"}
         </button>
       </div>
     </div>

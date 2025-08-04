@@ -3,33 +3,56 @@ const User = require('../Models/User');
 const Doctor = require('../Models/Doctor');
 const Patient = require('../Models/Patient');
 const generateToken = require('../utils/generateToken');
-// registration
+
+// Register Controller
 exports.register = async (req, res) => {
     try {
-        const { name, email, password,phoneNo, gender,address, role, specialization, profileImage,qualification,experiance,licenceNo,HospitalName,fees} = req.body;
+        const {
+            name,
+            email,
+            password,
+            phoneNo,
+            gender,
+            address,
+            role,
+            specialization,
+            profileImage,
+            qualification,
+            experience,
+            licenceNo,
+            hospitalName,
+            fees
+        } = req.body;
 
         const userExists = await User.findOne({ email });
-        // check user exists
-        if (userExists) return res.status(400).json({ message: "User already exists" });
+        if (userExists)
+            return res.status(400).json({ message: "User already exists" });
 
-        //hashing password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-       // creating the database
         const user = await User.create({
             name,
             email,
             password: hashedPassword,
-            role ,
+            role,
             profileImage,
             phoneNo,
             gender,
-            address,});
+            address,
+        });
 
         if (role === 'doctor') {
-            await Doctor.create({ userId: user._id, specialization,qualification,experiance,licenceNo,HospitalName,fees});
+            await Doctor.create({
+                userId: user._id,
+                specialization,
+                qualification,
+                experience,
+                licenceNo,
+                hospitalName,
+                fees
+            });
         } else if (role === 'patient') {
-            await Patient.create({ userId: user._id  });
+            await Patient.create({ userId: user._id });
         }
 
         res.status(201).json({
@@ -43,29 +66,50 @@ exports.register = async (req, res) => {
             gender: user.gender,
             address: user.address,
         });
+
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
 
+// Login Controller
 exports.login = async (req, res) => {
     try {
+        console.log('Login attempt:', req.body);
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
+        
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and password are required" });
+        }
 
-        if (!user) return res.status(400).json({ message: "User not found" });
+        const user = await User.findOne({ email });
+        console.log('User found:', user ? 'Yes' : 'No');
+
+        if (!user)
+            return res.status(400).json({ message: "User not found" });
 
         const match = await bcrypt.compare(password, user.password);
-        if (!match) return res.status(400).json({ message: "Invalid credentials" });
+        console.log('Password match:', match ? 'Yes' : 'No');
+        
+        if (!match)
+            return res.status(400).json({ message: "Invalid credentials" });
+
+        const token = generateToken(user._id);
+        console.log('Token generated successfully');
 
         res.json({
             _id: user._id,
             name: user.name,
             email: user.email,
             role: user.role,
-            token: generateToken(user._id)
+            token: token,
+            profileImage: user.profileImage,
+            phoneNo: user.phoneNo,
+            gender: user.gender,
+            address: user.address,
         });
     } catch (err) {
-        res.status(500).json({ message: "Server Error" , error: error.message });
+        console.error('Login error:', err);
+        res.status(500).json({ message: "Server Error", error: err.message });
     }
 };

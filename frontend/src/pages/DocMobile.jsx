@@ -1,16 +1,58 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import doctorImage from "../assets/images/doctor.png";
 import Calendar from "./components/Calender";
 import { Link } from "react-router-dom";
-
-const patients = [
-  { initials: "SM", name: "Stacy Mitchell", time: "9:15 AM", tag: "Weekly Visit", tagColor: "bg-pink-100 text-pink-600" },
-  { initials: "AD", name: "Amy Dunham", time: "9:30 AM", tag: "Routine Checkup", tagColor: "bg-blue-100 text-blue-600" },
-  { initials: "DJ", name: "Demi Joan", time: "9:50 AM", tag: "Report", tagColor: "bg-green-100 text-green-600" },
-  { initials: "SM", name: "Susan Myers", time: "10:00 AM", tag: "Weekly Visit", tagColor: "bg-pink-100 text-pink-600" }
-];
+import { doctorAPI } from "../services/api";
 
 export default function DoctormobileDashobaord() {
+  const [patients, setPatients] = useState([]);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [doctorName, setDoctorName] = useState("");
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [patientsResponse, reviewsResponse] = await Promise.all([
+          doctorAPI.getMyPatients(),
+          doctorAPI.getMyReviews()
+        ]);
+        
+        setPatients(patientsResponse.data);
+        setReviews(reviewsResponse.data);
+        
+        // Get doctor name from localStorage
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        setDoctorName(user.name || "Doctor");
+        
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
+        setError("Failed to load dashboard data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-red-600">{error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col md:flex-row bg-gray-100 min-h-screen font-sans">
       {/* Sidebar */}
@@ -25,12 +67,12 @@ export default function DoctormobileDashobaord() {
         {/* Header */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <h2 className="text-xl md:text-2xl font-light text-center md:text-left">
-            Good Morning <span className="font-bold text-teal-600">Dr. Kim!</span>
+            Good Morning <span className="font-bold text-teal-600">Dr. {doctorName}!</span>
           </h2>
           <div className="flex items-center space-x-4">
             <button><span className="icon-bell" /></button>
             <img src={doctorImage} alt="Doctor" className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-teal-400" />
-            <span className="font-medium">Dr. Kim</span>
+            <span className="font-medium">Dr. {doctorName}</span>
           </div>
         </div>
 
@@ -41,19 +83,19 @@ export default function DoctormobileDashobaord() {
             {/* Visits Summary */}
             <div className="rounded-xl shadow bg-white p-4 md:p-6 flex flex-col md:flex-row items-center">
               <div className="flex-1 text-center md:text-left">
-                <div className="text-base md:text-lg mb-2 font-medium">Visits for Today</div>
-                <div className="text-3xl md:text-4xl font-bold mb-2">104</div>
+                <div className="text-base md:text-lg mb-2 font-medium">My Patients</div>
+                <div className="text-3xl md:text-4xl font-bold mb-2">{patients.length}</div>
                 <div className="flex justify-center md:justify-start space-x-6 md:space-x-8">
                   <div>
-                    <div className="text-gray-700">New Patients</div>
+                    <div className="text-gray-700">Total Reviews</div>
                     <div className="text-lg font-semibold">
-                      40 <span className="text-green-500 ml-1 text-sm">51%</span>
+                      {reviews.length} <span className="text-green-500 ml-1 text-sm">reviews</span>
                     </div>
                   </div>
                   <div>
-                    <div className="text-gray-700">Old Patients</div>
+                    <div className="text-gray-700">Average Rating</div>
                     <div className="text-lg font-semibold">
-                      64 <span className="text-red-500 ml-1 text-sm">20%</span>
+                      {reviews.length > 0 ? (reviews.reduce((sum, review) => sum + (review.rating || 0), 0) / reviews.length).toFixed(1) : 0} <span className="text-blue-500 ml-1 text-sm">stars</span>
                     </div>
                   </div>
                 </div>
@@ -65,36 +107,50 @@ export default function DoctormobileDashobaord() {
             <div className="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
               {/* Patient List */}
               <div className="bg-white rounded-xl shadow p-4 md:p-6 w-full md:w-1/2">
-                <h3 className="font-semibold mb-4">Patient List</h3>
-                {patients.map((p, idx) => (
-                  <div key={idx} className="flex items-center mb-4">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center mr-4 font-bold ${p.tagColor}`}>
-                      {p.initials}
+                <h3 className="font-semibold mb-4">My Patients</h3>
+                {patients.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">No patients assigned yet</p>
+                ) : (
+                  patients.map((patient, idx) => (
+                    <div key={idx} className="flex items-center mb-4">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center mr-4 font-bold bg-blue-100 text-blue-600">
+                        {patient.userId?.name?.charAt(0) || "P"}
+                      </div>
+                      <div className="flex-1">
+                        <div className="font-medium">{patient.userId?.name || "Unknown Patient"}</div>
+                        <div className="text-xs text-gray-400">{patient.userId?.email || "No email"}</div>
+                      </div>
+                      <div className="text-gray-700 text-sm">Assigned</div>
                     </div>
-                    <div className="flex-1">
-                      <div className="font-medium">{p.name}</div>
-                      <div className="text-xs text-gray-400">{p.tag}</div>
-                    </div>
-                    <div className="text-gray-700 text-sm">{p.time}</div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
 
-              {/* Consultation */}
+              {/* Reviews */}
               <div className="bg-white rounded-xl shadow p-4 md:p-6 w-full md:w-1/2">
-                <h3 className="font-semibold mb-2">Consultation</h3>
-                <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                  <div className="font-medium text-teal-700 mb-2">Denzel White</div>
-                  <div className="text-gray-500 text-sm mb-2">Male - 28 Years 3 Months</div>
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    <span>🟣 Fever</span>
-                    <span>🟣 Cough</span>
-                    <span>🟣 Heart Burn</span>
-                  </div>
-                  <div className="mb-1 text-sm"><b>Last Checked:</b> Dr Evelyn on 21 April 2021 Prescription #ZJ983KTD</div>
-                  <div className="mb-1 text-sm"><b>Observation:</b> High fever and cough at normal hemoglobin levels.</div>
-                  <div className="text-sm"><b>Prescription:</b> Paracetamol - 2 times a day, Diazepam - Day and Night before meal, Wikoryl</div>
-                </div>
+                <h3 className="font-semibold mb-2">Recent Reviews</h3>
+                {reviews.length === 0 ? (
+                  <p className="text-gray-500 text-center py-4">No reviews yet</p>
+                ) : (
+                  reviews.slice(0, 3).map((review, idx) => (
+                    <div key={idx} className="bg-blue-50 p-4 rounded-lg mb-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="font-medium text-teal-700">
+                          {review.patient?.name || "Anonymous"}
+                        </div>
+                        <div className="text-yellow-500">
+                          {"★".repeat(review.rating || 0)}
+                        </div>
+                      </div>
+                      <div className="text-gray-600 text-sm mb-2">
+                        {review.comment || "No comment provided"}
+                      </div>
+                      <div className="text-xs text-gray-500">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </div>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>

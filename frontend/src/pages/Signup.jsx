@@ -1,6 +1,8 @@
 // Register.jsx
 import { useState, useRef } from "react";
 import { FaCamera } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { authAPI } from "../services/api";
 
 export default function Register() {
   const [userType, setUserType] = useState("patient");
@@ -16,6 +18,10 @@ export default function Register() {
   const [hospitalname, sethospitalname] = useState("");
   const [email, setemail] = useState("");
   const [fee, setfee] = useState("");
+  const [gender, setGender] = useState("");
+  const [specialization, setSpecialization] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
 
   const handleProfileClick = () => {
@@ -28,6 +34,56 @@ export default function Register() {
       setProfileImage(URL.createObjectURL(file));
     }
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const userData = {
+        name: fullname,
+        email,
+        password,
+        phoneNo: phone,
+        gender,
+        address,
+        role: userType,
+        profileImage: profileImage || "", // (handle actual upload separately)
+      };
+
+      if (userType === "doctor") {
+        userData.specialization = specialization;
+        userData.qualification = qualification;
+        userData.experience = parseInt(experience);
+        userData.licenceNo = licenseno;
+        userData.hospitalName = hospitalname;
+        userData.fees = parseInt(fee);
+      }
+
+      const response = await authAPI.register(userData);
+
+      // Store user data
+      localStorage.setItem("user", JSON.stringify(response.data));
+
+      // Redirect based on role
+      if (response.data.role === "doctor") {
+        navigate("/doctorDashboard");
+      } else {
+        navigate("/patientDashboard");
+      }
+
+    } catch (error) {
+      console.error("Registration error:", error);
+      if (error.response?.data?.message) {
+        alert(error.response.data.message);
+      } else {
+        alert("Registration failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
@@ -61,9 +117,7 @@ export default function Register() {
         </h2>
 
         {/* Registration Form */}
-        <form onSubmit={(e)=>{
-          e.preventDefault();
-        }} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input required value={fullname} onChange={(e)=>{
             setfullname(e.target.value);
             
@@ -78,11 +132,16 @@ export default function Register() {
           <input value={phone} onChange={(e)=>{
             setphone(e.target.value);
           }} type="text" placeholder="Phone Number" className="input border-gray-600 border-2 rounded-[5px] p-2" />
-          <select required className="input border-gray-600 border-2 rounded-[5px] p-2">
-            <option  value="">Select Gender</option>
-            <option>Male</option>
-            <option>Female</option>
-            <option>Other</option>
+          <select 
+            required 
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            className="input border-gray-600 border-2 rounded-[5px] p-2"
+          >
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
           </select>
           <textarea value={address} onChange={(e)=>{
             setaddress(e.target.value);
@@ -117,12 +176,17 @@ export default function Register() {
           {/* Doctor Specific Fields */}
           {userType === "doctor" && (
             <>
-              <select required className="input border-gray-600 border-2 rounded-[5px] p-2">
+              <select 
+                required 
+                value={specialization}
+                onChange={(e) => setSpecialization(e.target.value)}
+                className="input border-gray-600 border-2 rounded-[5px] p-2"
+              >
                 <option value="">Select Specialization</option>
-                <option>Cardiologist</option>
-                <option>Dentist</option>
-                <option>Dermatologist</option>
-                <option>General Physician</option>
+                <option value="Cardiologist">Cardiologist</option>
+                <option value="Dentist">Dentist</option>
+                <option value="Dermatologist">Dermatologist</option>
+                <option value="General Physician">General Physician</option>
               </select>
               <input required value={experience} onChange={(e)=>{
                 setexperience(e.target.value);
@@ -157,9 +221,10 @@ export default function Register() {
 
           <button
             type="submit"
-            className="md:col-span-2 bg-green-600 text-white py-2 rounded hover:bg-green-700"
+            disabled={loading}
+            className="md:col-span-2 bg-green-600 text-white py-2 rounded hover:bg-green-700 disabled:bg-gray-400"
           >
-            Register as {userType === "doctor" ? "Doctor" : "Patient"}
+            {loading ? "Registering..." : `Register as ${userType === "doctor" ? "Doctor" : "Patient"}`}
           </button>
         </form>
       </div>
