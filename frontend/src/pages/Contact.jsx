@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '../Navbar'
 import Footer from '../Footer';
 import { useState } from 'react';
-
+//Handling Contacts
 const Contact = () => {
    const [formData, setFormData] = useState({
     firstName: "",
