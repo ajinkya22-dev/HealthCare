@@ -1,166 +1,73 @@
-# Health Management System
+# Healthcare Application
 
-A comprehensive health management system with doctor-patient appointment booking, user authentication, and dashboard functionality.
+## Recent Fixes
 
-## Features
+### 1. Dashboard as Landing Page
+- **Issue**: Dashboard was not properly set as the landing page before login/register
+- **Fix**: Updated routing in `App.jsx` to make dashboard the default landing page
+- **Changes**: 
+  - Dashboard is now accessible at `/` and `/dashboard`
+  - Login/Register pages are accessible via navbar buttons
+  - Protected routes require authentication
 
-- **User Authentication**: Login and registration for both doctors and patients
-- **Doctor Dashboard**: View assigned patients, reviews, and manage appointments
-- **Patient Dashboard**: View assigned doctor, book appointments, and track medical history
-- **Appointment Booking**: Real-time appointment scheduling with doctors
-- **Doctor Search**: Browse and filter doctors by specialization
-- **Review System**: Patients can review their doctors
-- **Responsive Design**: Works on desktop and mobile devices
+### 2. Image Loading Issues
+- **Issue**: Doctor and patient profile images were not loading from backend
+- **Fix**: Updated image handling in frontend and backend
+- **Changes**:
+  - Added proper image URL construction in `Doctor.jsx` and `BookDoc.jsx`
+  - Added error handling for missing images
+  - Updated backend to create uploads directories automatically
+  - Fixed image path handling in `doctorController.js`
 
-## Tech Stack
+## Setup Instructions
 
-### Backend
-- **Node.js** with Express.js
-- **MongoDB** with Mongoose ODM
-- **JWT** for authentication
-- **bcryptjs** for password hashing
-- **multer** for file uploads
-- **cors** for cross-origin requests
+### Backend Setup
+1. Navigate to the Backend directory
+2. Install dependencies: `npm install`
+3. Start the server: `npm start`
+4. The server will automatically create uploads directories
 
-### Frontend
-- **React.js** with Vite
-- **Axios** for API communication
-- **React Router** for navigation
-- **Tailwind CSS** for styling
-- **React Icons** for icons
+### Frontend Setup
+1. Navigate to the frontend directory
+2. Install dependencies: `npm install`
+3. Start the development server: `npm run dev`
 
-## Prerequisites
+## Testing the Fixes
 
-- Node.js (v14 or higher)
-- MongoDB (local or cloud instance)
-- npm or yarn package manager
+### Dashboard Access
+1. Open the application in your browser
+2. You should see the dashboard as the landing page
+3. Click "Log In" or "Sign Up" in the navbar to access authentication pages
 
-## Installation
+### Image Loading
+1. Check the browser console for debug logs showing image URLs
+2. Verify that doctor profile images are loading correctly
+3. If images fail to load, placeholder images will be shown
 
-### 1. Clone the repository
-```bash
-git clone <repository-url>
-cd Hackathon_IEEE
+## File Structure
+
+```
+├── frontend/
+│   ├── src/
+│   │   ├── App.jsx (Updated routing)
+│   │   ├── pages/
+│   │   │   ├── components/
+│   │   │   │   └── Doctor.jsx (Fixed image loading)
+│   │   │   └── BookDoc.jsx (Fixed image loading)
+│   │   └── services/
+│   │       └── api.js
+└── Backend/
+    ├── server.js (Added uploads directory creation)
+    ├── Controllers/
+    │   └── doctorController.js (Fixed image path handling)
+    └── uploads/ (Auto-created)
+        ├── doctor-profiles/
+        └── patient-profiles/
 ```
 
-### 2. Backend Setup
+## Debug Information
 
-```bash
-cd Backend
-npm install
-```
-
-Create a `.env` file in the Backend directory:
-```env
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/health_management
-JWT_SECRET=your_jwt_secret_key_here
-```
-
-### 3. Frontend Setup
-
-```bash
-cd frontend
-npm install
-```
-
-## Running the Application
-
-### 1. Start the Backend Server
-
-```bash
-cd Backend
-npm start
-```
-
-The backend server will start on `http://localhost:5000`
-
-### 2. Start the Frontend Development Server
-
-```bash
-cd frontend
-npm run dev
-```
-
-The frontend will start on `http://localhost:3000`
-
-## API Endpoints
-
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-
-### Doctors
-- `GET /api/doctors` - Get all doctors
-- `GET /api/doctors/patients` - Get doctor's patients (protected)
-- `GET /api/doctors/reviews` - Get doctor's reviews (protected)
-
-### Patients
-- `GET /api/patients/dashboard` - Get patient dashboard (protected)
-- `PATCH /api/patients/assignDoctor` - Assign doctor to patient (protected)
-
-### Appointments
-- `POST /api/appointments` - Create appointment
-- `GET /api/appointments/doctor/:doctorId` - Get doctor's appointments
-- `GET /api/appointments/patient/:patientId` - Get patient's appointments
-
-### Reviews
-- `POST /api/reviews` - Create review
-- `GET /api/reviews/doctor/:doctorId` - Get doctor's reviews
-
-## Usage
-
-### For Patients
-1. Register as a patient
-2. Browse available doctors
-3. Book appointments with preferred doctors
-4. View appointment history and assigned doctor
-5. Leave reviews for doctors
-
-### For Doctors
-1. Register as a doctor with specialization and credentials
-2. View assigned patients
-3. Check patient reviews
-4. Manage appointment schedule
-
-## Database Schema
-
-### User Model
-- name, email, password, role, profileImage, phoneNo, gender, address
-
-### Doctor Model
-- userId (ref to User), specialization, qualification, experiance, licenceNo, HospitalName, fees
-
-### Patient Model
-- userId (ref to User), doctor (ref to Doctor)
-
-### Appointment Model
-- doctor (ref to Doctor), patient (ref to Patient), appointmentDate, description, time, status
-
-### Review Model
-- doctor (ref to Doctor), patient (ref to Patient), rating, comment, createdAt
-
-## Environment Variables
-
-### Backend (.env)
-```
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/health_management
-JWT_SECRET=your_secret_key_here
-```
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
-
-## Support
-
-For support, please open an issue in the repository or contact the development team.
+The application now includes console logging to help debug image loading issues:
+- Frontend logs show the constructed image URLs
+- Backend logs show the doctor data and profile image paths
+- Check browser console and server logs for debugging information
