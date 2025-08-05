@@ -30,12 +30,22 @@ exports.register = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Handle profile image - if it's a blob URL, we'll store it as is for now
+        // In a production environment, you'd want to convert blob URLs to actual files
+        let finalProfileImage = profileImage || 'default.png';
+        
+        // If it's a blob URL, we can store it temporarily
+        // For production, you should convert blob to file and upload
+        if (profileImage && profileImage.startsWith('blob:')) {
+            finalProfileImage = profileImage;
+        }
+
         const user = await User.create({
             name,
             email,
             password: hashedPassword,
             role,
-            profileImage,
+            profileImage: finalProfileImage,
             phoneNo,
             gender,
             address,
@@ -68,6 +78,7 @@ exports.register = async (req, res) => {
         });
 
     } catch (err) {
+        console.error('Registration error:', err);
         res.status(500).json({ message: err.message });
     }
 };

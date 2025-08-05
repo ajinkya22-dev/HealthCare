@@ -1,3 +1,4 @@
+// Data integrity enforced: Patient creation requires valid user and doctor references.
 const Patient = require('../Models/Patient');
 const Review = require('../Models/Review');
 const Appointments = require('../Models/Appointments');
@@ -74,4 +75,45 @@ exports.assignDoctor = async (req, res) => {
         console.error("❌ Assign doctor error:", err);
         res.status(500).json({ message: "Server error", error: err.message });
     }
+};
+// Create patient (add if not present)
+exports.createPatient = async (req, res) => {
+  try {
+    const { userId, doctorId } = req.body;
+    // Validate user
+    const user = await require('../Models/User').findById(userId);
+    if (!user) {
+      return res.status(400).json({ message: "Invalid userId" });
+    }
+    // Validate doctor
+    const doctor = await require('../Models/Doctor').findById(doctorId);
+    if (!doctor) {
+      return res.status(400).json({ message: "Invalid doctorId" });
+    }
+    // Create patient
+    const patient = await Patient.create({ userId: user._id, doctor: doctor._id });
+    res.status(201).json(patient);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to create patient", error: err.message });
+  }
+};
+
+// Get or create patient profile for current user
+exports.getOrCreatePatient = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Check if patient already exists
+    let patient = await Patient.findOne({ userId });
+    
+    if (!patient) {
+      // Create a new patient profile without assigning a doctor
+      patient = await Patient.create({ userId });
+    }
+    
+    res.status(200).json(patient);
+  } catch (err) {
+    console.error("❌ Get or create patient error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 };

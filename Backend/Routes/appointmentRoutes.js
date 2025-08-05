@@ -6,8 +6,12 @@ const {
     getDoctorAppointments,
     getPatientAppointments,
     getMyAppointments,
-    getMyAppointmentsForPatient
+    getMyAppointmentsForPatient,
+    testPatientData
 } = require('../Controllers/appointmentController');
+
+// Test endpoint to debug patient data
+router.get('/test-patient-data', testPatientData);
 
 // Create appointment
 router.post('/', protect, createAppointment);

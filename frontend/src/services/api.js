@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-// Axios instance
+// Axios instance - deployment ready
 const api = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -26,7 +26,12 @@ api.interceptors.response.use(
     (error) => {
         if (error.response?.status === 401) {
             localStorage.removeItem('user');
-            window.location.href = '/login';
+            // Only redirect to login if we're not already on a public page
+            const publicPages = ['/', '/login', '/register', '/contact'];
+            const currentPath = window.location.pathname;
+            if (!publicPages.includes(currentPath)) {
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }
@@ -47,6 +52,7 @@ export const doctorAPI = {
 export const patientAPI = {
     getDashboard: () => api.get('/patients/dashboard'),
     assignDoctor: (doctorId) => api.patch('/patients/assignDoctor', { doctorId }),
+    getProfile: () => api.get('/patients/profile'),
 };
 
 export const appointmentAPI = {
@@ -54,6 +60,8 @@ export const appointmentAPI = {
     getDoctorAppointments: (doctorId) => api.get(`/appointments/doctor/${doctorId}`),
     getPatientAppointments: (patientId) => api.get(`/appointments/patient/${patientId}`),
     getMyAppointments: () => api.get('/appointments/my-appointments'),
+    getMyPatientAppointments: () => api.get('/appointments/my-patient-appointments'),
+    testPatientData: () => api.get('/appointments/test-patient-data'),
 };
 
 export const reviewAPI = {

@@ -8,11 +8,44 @@ import {
   ChatBubbleLeftRightIcon,
   ArrowRightOnRectangleIcon
 } from "@heroicons/react/24/solid";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Sidebar({ show, onClose }) {
   const [testResultCount] = useState(5); // simulate the "5" badge
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      try {
+        const parsedUser = JSON.parse(userData);
+        setUser(parsedUser);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+      }
+    }
+  }, []);
+
+  const handleMyAppointments = () => {
+    navigate("/patientDashboard");
+    onClose();
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    navigate("/");
+    onClose();
+  };
+
+  // Get user's first letter for avatar
+  const getUserInitial = () => {
+    if (user?.name) {
+      return user.name.charAt(0).toUpperCase();
+    }
+    return "U";
+  };
 
   return (
     <>
@@ -34,9 +67,11 @@ export default function Sidebar({ show, onClose }) {
           <div>
             <div className="flex flex-col items-center py-6">
               <div className="bg-violet-500 w-14 h-14 flex items-center justify-center rounded-full text-white text-3xl font-bold">
-                N
+                {getUserInitial()}
               </div>
-              <div className="font-bold text-lg mt-2 tracking-wide">USER</div>
+              <div className="font-bold text-lg mt-2 tracking-wide">
+                {user?.name || 'User'}
+              </div>
             </div>
 
             {/* Menu group */}
@@ -44,10 +79,13 @@ export default function Sidebar({ show, onClose }) {
             <nav>
               <ul className="flex flex-col gap-2 px-2">
                 <li>
-                 <Link className="flex items-center gap-3 px-4 py-3 rounded-lg text-violet-600 bg-violet-100 font-medium">
+                 <button 
+                   onClick={handleMyAppointments}
+                   className="flex items-center gap-3 px-4 py-3 rounded-lg text-violet-600 bg-violet-100 font-medium w-full text-left hover:bg-violet-200"
+                 >
                     <CalendarDaysIcon className="w-6 h-6" />
                     My Appointments
-                   </Link>
+                 </button>
                 </li>
                 <li>
                  <Link className="flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-gray-100">
@@ -84,12 +122,15 @@ export default function Sidebar({ show, onClose }) {
                     Feedback
                    </Link>
                 </li>
-                <li>
-                  <Link className="flex items-center gap-3 px-4 py-3 rounded-lg text-black hover:bg-gray-100">
-                    <ArrowRightOnRectangleIcon className="w-6 h-6" />
-                    Logout
-                    </Link>
-                 
+                {/* Logout icon only, no text link */}
+                <li className="flex items-center justify-center mt-4">
+                  <button 
+                    onClick={handleLogout}
+                    className="p-2 rounded-full hover:bg-gray-200"
+                    title="Logout"
+                  >
+                    <ArrowRightOnRectangleIcon className="w-8 h-8 text-black" />
+                  </button>
                 </li>
               </ul>
             </nav>

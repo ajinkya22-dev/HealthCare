@@ -12,18 +12,56 @@ export default function DoctorProfileCard() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
+        console.log('Fetching doctors from API...');
         const response = await doctorAPI.getAllDoctors();
+        console.log('Doctors response:', response.data);
         setDoctors(response.data);
       } catch (err) {
         console.error("Error fetching doctors:", err);
-        setError("Failed to load doctors");
+        // Don't show error for 401, just show empty state
+        if (err.response?.status === 401) {
+          setDoctors([]);
+        } else {
+          setError("Failed to load doctors");
+        }
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDoctors();
+    // Add a small delay to prevent immediate API calls
+    const timer = setTimeout(() => {
+      fetchDoctors();
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, []);
+
+  // Function to get proper image URL
+  const getImageUrl = (profileImage) => {
+    if (!profileImage) {
+      return "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjMyIiB5PSIzNiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjc3NDhEIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+RHI8L3RleHQ+Cjwvc3ZnPgo=";
+    }
+    
+    // If it's a blob URL, return as is
+    if (profileImage.startsWith('blob:')) {
+      return profileImage;
+    }
+    
+    // If it's a relative path, construct full URL
+    if (profileImage.startsWith('uploads/')) {
+      const baseURL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      return `${baseURL}/${profileImage}`;
+    }
+    
+    // If it's already a full URL, return as is
+    if (profileImage.startsWith('http')) {
+      return profileImage;
+    }
+    
+    // Default fallback
+    return "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjMyIiB5PSIzNiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjc3NDhEIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+RHI8L3RleHQ+Cjwvc3ZnPgo=";
+  };
 
   if (loading) {
     return (
@@ -41,6 +79,12 @@ export default function DoctorProfileCard() {
       <div className="bg-gray-50 w-full py-20">
         <div className="text-center">
           <p className="text-red-600">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="mt-4 bg-[#1694a4] text-white px-4 py-2 rounded hover:bg-[#147c88]"
+          >
+            Retry
+          </button>
         </div>
       </div>
     );
@@ -63,60 +107,69 @@ export default function DoctorProfileCard() {
           Our Expert Doctors
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {doctors.map((doctor) => (
-            <div key={doctor._id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
-              <div className="p-6">
-                <div className="flex items-center mb-4">
-                  <div className="w-16 h-16 rounded-full overflow-hidden mr-4">
-                    <img
-                        src={
-                          doctor.profileImage
-                              ? `http://localhost:5000/${doctor.profileImage}`
-                              : "https://via.placeholder.com/64x64?text=Dr"
-                        }
-                        alt={`Dr. ${doctor.name}`}
+          {doctors.map((doctor) => {
+            console.log('Rendering doctor:', {
+              id: doctor._id,
+              name: doctor.name || doctor.userId?.name,
+              profileImage: doctor.profileImage || doctor.userId?.profileImage
+            });
+            
+            return (
+              <div key={doctor._id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                <div className="p-6">
+                  <div className="flex items-center mb-4">
+                    <div className="w-16 h-16 rounded-full overflow-hidden mr-4">
+                      <img
+                        src={getImageUrl(doctor.profileImage || doctor.userId?.profileImage)}
+                        alt={`Dr. ${doctor.name || doctor.userId?.name || 'Doctor'}`}
                         className="w-full h-full object-cover"
-                    />
-
+                                                 onError={(e) => {
+                           console.log('Image failed to load for doctor:', doctor.name || doctor.userId?.name);
+                           e.target.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjMyIiB5PSIzNiIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNjc3NDhEIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+RHI8L3RleHQ+Cjwvc3ZnPgo=";
+                         }}
+                      />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold text-gray-800">
+                        Dr. {doctor.name || doctor.userId?.name || 'Unknown'}
+                      </h3>
+                      <p className="text-gray-600">{doctor.specialization || 'General Physician'}</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-800">Dr. {doctor.name}</h3>
-                    <p className="text-gray-600">{doctor.specialization}</p>
+                  
+                  <div className="space-y-2 mb-4">
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Experience:</span> {doctor.experiance || 0} years
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Qualification:</span> {doctor.qualification || 'MBBS'}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Hospital:</span> {doctor.HospitalName || 'Not specified'}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Consultation Fee:</span> ₹{doctor.fees || 0}
+                    </p>
                   </div>
-                </div>
-                
-                <div className="space-y-2 mb-4">
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium">Experience:</span> {doctor.experiance} years
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium">Qualification:</span> {doctor.qualification}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium">Hospital:</span> {doctor.HospitalName}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    <span className="font-medium">Consultation Fee:</span> ₹{doctor.fees}
-                  </p>
-                </div>
 
-                <div className="flex gap-3">
-                  <button 
-                    onClick={() => navigate("/bookAppointment", { state: { doctor } })}
-                    className="flex-1 bg-[#179fac] text-white px-4 py-2 rounded-full font-semibold shadow hover:bg-[#147c88] transition"
-                  >
-                    Book Appointment
-                  </button>
-                  <button 
-                    onClick={() => navigate(`/doctor/${doctor._id}`)}
-                    className="px-4 py-2 border border-[#179fac] text-[#179fac] rounded-full hover:bg-[#179fac] hover:text-white transition"
-                  >
-                    View Profile
-                  </button>
+                  <div className="flex gap-3">
+                    <button 
+                      onClick={() => navigate("/bookAppointment", { state: { doctor } })}
+                      className="flex-1 bg-[#179fac] text-white px-4 py-2 rounded-full font-semibold shadow hover:bg-[#147c88] transition"
+                    >
+                      Book Appointment
+                    </button>
+                    <button 
+                      onClick={() => navigate(`/doctor/${doctor._id}`)}
+                      className="px-4 py-2 border border-[#179fac] text-[#179fac] rounded-full hover:bg-[#179fac] hover:text-white transition"
+                    >
+                      View Profile
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

@@ -7,55 +7,116 @@ const multer = require('multer');
 // Get all doctors (public route)
 exports.getAllDoctors = async (req, res) => {
     try {
+        console.log('Fetching all doctors...');
         const doctors = await Doctor.find()
             .populate('userId', 'name email profileImage phoneNo gender address')
             .select('-__v');
         
-        const doctorsWithUserData = doctors.map(doctor => ({
-            _id: doctor._id,
-            userId: doctor.userId,
-            specialization: doctor.specialization,
-            qualification: doctor.qualification,
-            experiance: doctor.experience, // Fix field name
-            licenceNo: doctor.licenceNo,
-            HospitalName: doctor.hospitalName, // Fix field name
-            fees: doctor.fees,
-            profileImage: doctor.userId.profileImage,
-            name: doctor.userId.name,
-            email: doctor.userId.email,
-            phoneNo: doctor.userId.phoneNo,
-            gender: doctor.userId.gender,
-            address: doctor.userId.address
-        }));
+        console.log('Doctors found:', doctors.length);
         
+        const doctorsWithUserData = doctors.map(doctor => {
+            console.log('Doctor data:', {
+                _id: doctor._id,
+                userId: doctor.userId,
+                name: doctor.userId?.name,
+                profileImage: doctor.userId?.profileImage
+            });
+            
+            return {
+                _id: doctor._id,
+                userId: doctor.userId,
+                specialization: doctor.specialization,
+                qualification: doctor.qualification,
+                experiance: doctor.experience, // Fix field name
+                licenceNo: doctor.licenceNo,
+                HospitalName: doctor.hospitalName, // Fix field name
+                fees: doctor.fees,
+                profileImage: doctor.userId?.profileImage || null,
+                name: doctor.userId?.name || 'Unknown',
+                email: doctor.userId?.email || '',
+                phoneNo: doctor.userId?.phoneNo || '',
+                gender: doctor.userId?.gender || '',
+                address: doctor.userId?.address || ''
+            };
+        });
+        
+        console.log('Processed doctors data:', doctorsWithUserData.length);
         res.json(doctorsWithUserData);
     } catch (error) {
+        console.error('Error in getAllDoctors:', error);
         res.status(500).json({ message: "Error fetching doctors", error: error.message });
     }
 };
 
 // Get all patients assigned to doctor
 exports.getMyPatients = async (req, res) => {
-    const doctor = await Doctor.findOne({ userId: req.user.id });
-    const patients = await Patient.find({ doctor: doctor._id }).populate('userId', 'name email');
-    res.json(patients);
+    try {
+        const doctor = await Doctor.findOne({ userId: req.user.id });
+        if (!doctor) {
+            return res.status(404).json({ message: "Doctor not found" });
+        }
+        
+        const patients = await Patient.find({ doctor: doctor._id })
+            .populate('userId', 'name email profileImage phoneNo gender address');
+        
+        const patientsWithUserData = patients.map(patient => ({
+            _id: patient._id,
+            userId: {
+                _id: patient.userId?._id,
+                name: patient.userId?.name || 'Unknown',
+                email: patient.userId?.email || '',
+                profileImage: patient.userId?.profileImage || null,
+                phoneNo: patient.userId?.phoneNo || '',
+                gender: patient.userId?.gender || '',
+                address: patient.userId?.address || ''
+            }
+        }));
+        
+        res.json(patientsWithUserData);
+    } catch (error) {
+        console.error('Error in getMyPatients:', error);
+        res.status(500).json({ message: "Error fetching patients", error: error.message });
+    }
 };
 
 // Get reviews for logged-in doctor
 exports.getMyReviews = async (req, res) => {
-    const doctor = await Doctor.findOne({ userId: req.user.id });
-    const reviews = await Review.find({ doctor: doctor._id }).populate('patient');
-    res.json(reviews);
+    try {
+        const doctor = await Doctor.findOne({ userId: req.user.id });
+        if (!doctor) {
+            return res.status(404).json({ message: "Doctor not found" });
+        }
+        
+        const reviews = await Review.find({ doctor: doctor._id })
+            .populate('patient', 'name email')
+            .populate('doctor', 'specialization');
+        res.json(reviews);
+    } catch (error) {
+        console.error('Error in getMyReviews:', error);
+        res.status(500).json({ message: "Error fetching reviews", error: error.message });
+    }
 };
 
 // Upload profile image
-// doctorController.js
 exports.uploadProfileImage = async (req, res) => {
-    const doctor = await Doctor.findOne({ userId: req.user.id });
-    const imagePath = `uploads/doctor-profiles/${req.file.filename}`;
-
-    doctor.profileImage = imagePath;
-    await doctor.save();
-
-    res.json({ message: "Profile image uploaded", path: imagePath });
+    try {
+        const doctor = await Doctor.findOne({ userId: req.user.id });
+        if (!doctor) {
+            return res.status(404).json({ message: "Doctor not found" });
+        }
+        
+        const imagePath = `uploads/doctor-profiles/${req.file.filename}`;
+        
+        // Update both doctor and user profile image
+        doctor.profileImage = imagePath;
+        await doctor.save();
+        
+        // Also update the user's profile image
+        await User.findByIdAndUpdate(req.user.id, { profileImage: imagePath });
+        
+        res.json({ message: "Profile image uploaded", path: imagePath });
+    } catch (error) {
+        console.error('Error in uploadProfileImage:', error);
+        res.status(500).json({ message: "Error uploading image", error: error.message });
+    }
 };
