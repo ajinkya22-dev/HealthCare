@@ -13,7 +13,7 @@ const Dashboard = () => {
       <Navbar></Navbar>
       <HeroSection></HeroSection>
       <ResultsInNumbers></ResultsInNumbers>
-      <DoctorSearchForm></DoctorSearchForm>
+      {/*<DoctorSearchForm></DoctorSearchForm>*/}
       <DoctorProfileCard></DoctorProfileCard>
       <Services></Services>
       <Footer></Footer>

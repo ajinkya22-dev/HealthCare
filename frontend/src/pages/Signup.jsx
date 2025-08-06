@@ -92,7 +92,7 @@ export default function Register() {
         <div className="flex justify-center mb-6">
           <button
             onClick={() => setUserType("patient")}
-            className={`px-4 py-2 rounded-l-md border ${
+            className={`px-4 py-2 rounded-l-md border cursor-pointer ${
               userType === "patient"
                 ? "bg-white text-black font-medium"
                 : "bg-gray-100 text-gray-500"
@@ -102,7 +102,7 @@ export default function Register() {
           </button>
           <button
             onClick={() => setUserType("doctor")}
-            className={`px-4 py-2 rounded-r-md border ${
+            className={`px-4 py-2 rounded-r-md border cursor-pointer ${
               userType === "doctor"
                 ? "bg-white text-black font-medium"
                 : "bg-gray-100 text-gray-500"
@@ -222,7 +222,7 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="md:col-span-2 bg-green-600 text-white py-2 rounded hover:bg-green-700 disabled:bg-gray-400"
+            className="md:col-span-2 cursor-pointer bg-green-600 text-white py-2 rounded hover:bg-green-700 disabled:bg-gray-400"
           >
             {loading ? "Registering..." : `Register as ${userType === "doctor" ? "Doctor" : "Patient"}`}
           </button>

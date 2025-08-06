@@ -211,15 +211,16 @@ export default function DoctorDashboard() {
                  <div className="text-4xl font-bold mb-2 dark:text-white">{todayAppointments.length}</div>
                  <div className="flex space-x-8">
                    <div>
-                     <div className="text-gray-700 dark:text-gray-300">New Patients</div>
+                    {/*Comment to Comment Or Remove the following* */}
+                    {/* <div className="text-gray-700 dark:text-gray-300">New Patients</div>
                      <div className="text-xl font-semibold dark:text-white">
                        {newPatients}
                        <span className="text-green-500 dark:text-green-400 ml-2 text-sm">
                          {newPatients > 0 ? Math.round((newPatients / patients.length) * 100) : 0}%
                        </span>
-                     </div>
+                     </div>*/ }
                    </div>
-                   <div>
+                  {/* <div>
                      <div className="text-gray-700 dark:text-gray-300">Old Patients</div>
                      <div className="text-xl font-semibold dark:text-white">
                        {oldPatients}
@@ -227,7 +228,7 @@ export default function DoctorDashboard() {
                          {oldPatients > 0 ? Math.round((oldPatients / appointments.length) * 100) : 0}%
                        </span>
                      </div>
-                   </div>
+                   </div> */}
                  </div>
                </div>
                <img src={doctorImage} alt="Doctor" className="w-32 h-32 rounded-xl object-cover ml-8" />

@@ -1,3 +1,7 @@
+import { toast } from 'react-toastify';
+
+
+
 import { useState, useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -107,7 +111,7 @@ export default function BookDoctorProfile() {
       };
 
       await appointmentAPI.createAppointment(appointmentData);
-      alert('Appointment booked successfully!');
+     toast.success("Appointment booked successfully!");
       navigate('/patientDashboard');
     } catch (error) {
       console.error('Error booking appointment:', error);

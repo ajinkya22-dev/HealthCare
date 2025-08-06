@@ -36,14 +36,14 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-gray-100 dark:bg-gray-800 py-4 navbar fixed top-0 left-0 w-full shadow-md z-50 transition-colors duration-200">
+    <nav className="bg-gray-100  py-4 navbar fixed top-0 left-0 w-full shadow-md z-50 transition-colors duration-200">
       <div className="container mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
           <Link to="/">
             <span className="text-xl font-semibold text-[#2ca181] dark:text-[#4ade80] ml-25">
-              Health
-              <span className="text-[#8bc34a] dark:text-[#22c55e]">care</span>
+              Medi
+              <span className="text-[#8bc34a] dark:text-[#22c55e]">Connect</span>
             </span>
           </Link>
         </div>
@@ -56,7 +56,7 @@ const Navbar = () => {
               "py-2 px-3 font-semibold transition border-b-4" +
               (isActive
                 ? " border-green-500 text-green-600 dark:text-green-400"
-                : " border-transparent text-gray-800 dark:text-gray-200 hover:text-green-500 dark:hover:text-green-400")
+                : " border-transparent text-gray-800  hover:text-green-500 dark:hover:text-green-400")
             }
           >
             Home
@@ -67,7 +67,7 @@ const Navbar = () => {
               "py-2 px-3 font-semibold transition border-b-4" +
               (isActive
                 ? " border-green-500 text-green-600 dark:text-green-400"
-                : " border-transparent text-gray-800 dark:text-gray-200 hover:text-green-500 dark:hover:text-green-400")
+                : " border-transparent text-gray-800  hover:text-green-500 dark:hover:text-green-400")
             }
           >
             Service
@@ -78,7 +78,7 @@ const Navbar = () => {
               "py-2 px-3 font-semibold transition border-b-4" +
               (isActive
                 ? " border-green-500 text-green-600 dark:text-green-400"
-                : " border-transparent text-gray-800 dark:text-gray-200 hover:text-green-500 dark:hover:text-green-400")
+                : " border-transparent text-gray-800  hover:text-green-500 dark:hover:text-green-400")
             }
           >
             Contact Us
@@ -86,7 +86,7 @@ const Navbar = () => {
 
           {!isLoggedIn ? (
             <>
-              <Link to="/register" className="text-green-600 dark:text-green-400 hover:underline">
+              <Link to="/register" className="text-green-600  hover:underline">
                 Sign Up
               </Link>
               <Link
@@ -106,7 +106,7 @@ const Navbar = () => {
           )}
           
           {/* Theme Toggle */}
-          <ThemeToggle />
+       
         </div>
       </div>
       <Sidebar show={sidebarOpen} onClose={toggleSidebar} />

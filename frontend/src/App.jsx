@@ -1,3 +1,6 @@
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -11,6 +14,10 @@ import Calendar from "./pages/components/Calender";
 import Appointment from "./pages/Appointment";
 import BookDoctorProfile from "./pages/BookDoc";
 import DoctormobileDashobaord from "./pages/DocMobile";
+import Service from './pages/Service';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
+//import Loginn from "./pages/Loginn";
 
 const App = () => {
   return (
@@ -27,8 +34,11 @@ const App = () => {
           <Route path="/appointments" element={<Appointment />} />
           <Route path="/bookAppointment" element={<BookDoctorProfile />} />
           <Route path="/doc" element={<DoctormobileDashobaord />} />
+          {/*<Route path="/loginn" element={<Loginn></Loginn>}></Route>*/}
+          <Route path='/service' exact element={<Service></Service>}></Route>
         </Routes>
       </Router>
+      <ToastContainer position="top-center" autoClose={3000} />
     </ThemeProvider>
   );
 };
