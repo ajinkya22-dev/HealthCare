@@ -7,7 +7,8 @@ const {
     getPatientAppointments,
     getMyAppointments,
     getMyAppointmentsForPatient,
-    testPatientData
+    testPatientData,
+    updateAppointmentStatus
 } = require('../Controllers/appointmentController');
 
 // Test endpoint to debug patient data
@@ -27,5 +28,8 @@ router.get('/doctor/:doctorId', protect, getDoctorAppointments);
 
 // Get appointments by patient ID
 router.get('/patient/:patientId', protect, getPatientAppointments);
+
+// PATCH update appointment status
+router.patch('/:id/status', protect, updateAppointmentStatus);
 
 module.exports = router;

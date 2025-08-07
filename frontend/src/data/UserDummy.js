@@ -8,7 +8,6 @@ export const dummyDoctors = [
     phone: "9876543210",
     gender: "Male",
     address: "Bandra West, Mumbai",
-    profilePicture: "https://randomuser.me/api/portraits/men/45.jpg",
     qualification: "MBBS, MD (Cardiology)",
     licenseNo: "MH12345678",
     hospitalName: "Lilavati Hospital",
@@ -24,7 +23,6 @@ export const dummyDoctors = [
     phone: "9812345678",
     gender: "Female",
     address: "Koregaon Park, Pune",
-    profilePicture: "https://randomuser.me/api/portraits/women/44.jpg",
     qualification: "MBBS, MS (Gynaecology)",
     licenseNo: "PN98765432",
     hospitalName: "Ruby Hall Clinic",
@@ -41,7 +39,6 @@ export const dummyPatients = [
     password: "mypassword123",
     phone: "9090909090",
     role: "patient",
-    profilePicture: "https://randomuser.me/api/portraits/men/33.jpg",
     address: "Dhanakwadi, Pune",
     gender: "Male"
   },
@@ -52,7 +49,6 @@ export const dummyPatients = [
     password: "sneha12345",
     phone: "9876543211",
     role: "patient",
-    profilePicture: "https://randomuser.me/api/portraits/women/36.jpg",
     address: "Kothrud, Pune",
     gender: "Female"
   }

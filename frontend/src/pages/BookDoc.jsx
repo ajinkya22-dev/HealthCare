@@ -93,7 +93,6 @@ export default function BookDoctorProfile() {
     try {
       const user = JSON.parse(localStorage.getItem('user') || '{}');
       if (!user._id) {
-        alert('Please login to book an appointment');
         navigate('/');
         return;
       }
@@ -125,14 +124,14 @@ export default function BookDoctorProfile() {
   // Show doctor list if no specific doctor is selected
   if (showDoctorList) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+      <div className="min-h-screen bg-gray-50 transition-colors duration-200">
         <Navbar />
         <div className="max-w-7xl mx-auto px-4 py-8 mt-20">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Book an Appointment
             </h1>
-            <p className="text-gray-600 dark:text-gray-400">Select a doctor to book your appointment</p>
+            <p className="text-gray-600">Select a doctor to book your appointment</p>
           </div>
 
           {doctors.length === 0 ? (
@@ -143,7 +142,7 @@ export default function BookDoctorProfile() {
           ) : (
                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                {doctors.map((doctor) => (
-                 <div key={doctor._id} className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                 <div key={doctor._id} className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                    <div className="p-6">
                      <div className="flex items-center mb-4">
                        <div className="w-16 h-16 rounded-full overflow-hidden mr-4">
@@ -157,28 +156,28 @@ export default function BookDoctorProfile() {
                          />
                        </div>
                        <div>
-                         <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-200">
+                         <h3 className="text-xl font-semibold text-gray-800">
                            Dr. {doctor.name || doctor.userId?.name || 'Unknown'}
                          </h3>
-                         <p className="text-gray-600 dark:text-gray-400">{doctor.specialization || 'General Physician'}</p>
+                         <p className="text-gray-600">{doctor.specialization || 'General Physician'}</p>
                        </div>
                      </div>
                      
                      <div className="space-y-2 mb-4">
-                       <p className="text-sm text-gray-600 dark:text-gray-400">
+                       <p className="text-sm text-gray-600">
                          <span className="font-medium">Experience:</span> {doctor.experiance || 0} years
                        </p>
-                       <p className="text-sm text-gray-600 dark:text-gray-400">
+                       <p className="text-sm text-gray-600">
                          <span className="font-medium">Hospital:</span> {doctor.HospitalName || 'Not specified'}
                        </p>
-                       <p className="text-sm text-gray-600 dark:text-gray-400">
+                       <p className="text-sm text-gray-600">
                          <span className="font-medium">Consultation Fee:</span> ₹{doctor.fees || 0}
                        </p>
                      </div>
 
                      <button 
                        onClick={() => handleDoctorSelect(doctor)}
-                       className="w-full bg-[#179fac] dark:bg-[#0ea5e9] text-white px-4 py-2 rounded-full font-semibold shadow hover:bg-[#147c88] dark:hover:bg-[#0284c7] transition"
+                       className="w-full bg-[#179fac] text-white px-4 py-2 rounded-full font-semibold shadow hover:bg-[#147c88] transition"
                      >
                        Select Doctor
                      </button>
@@ -195,23 +194,23 @@ export default function BookDoctorProfile() {
   // Show booking form for selected doctor
   if (!doctor) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+      <div className="min-h-screen bg-gray-50 transition-colors duration-200">
         <Navbar />
-        <div className="max-w-4xl mx-auto mt-20 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
-          <p className="text-center text-gray-600 dark:text-gray-400">No doctor selected. Please go back and select a doctor.</p>
+        <div className="max-w-4xl mx-auto mt-20 p-6 bg-white rounded-lg shadow-md">
+          <p className="text-center text-gray-600">No doctor selected. Please go back and select a doctor.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-gray-50 transition-colors duration-200">
       <Navbar />
-      <div className="max-w-4xl mx-auto mt-20 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+      <div className="max-w-4xl mx-auto mt-20 p-6 bg-white rounded-lg shadow-md">
         {/* Back Button */}
                  <button
            onClick={() => setShowDoctorList(true)}
-           className="mb-6 text-[#179fac] dark:text-[#0ea5e9] hover:text-[#147c88] dark:hover:text-[#0284c7] flex items-center"
+           className="mb-6 text-[#179fac] hover:text-[#147c88] flex items-center"
          >
            ← Back to Doctor List
          </button>
@@ -228,18 +227,18 @@ export default function BookDoctorProfile() {
              }}
           />
                      <div className="flex-1">
-             <h2 className="text-2xl font-semibold flex items-center gap-2 dark:text-gray-200">
+             <h2 className="text-2xl font-semibold flex items-center gap-2">
                Dr. {doctor.name || doctor.userId?.name || 'Unknown'} <FaCheckCircle className="text-blue-500" />
              </h2>
-             <p className="text-gray-500 dark:text-gray-400">{doctor.qualification || 'MBBS'} – {doctor.specialization || 'General Physician'}</p>
-             <span className="inline-block mt-1 px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded-full dark:text-gray-300">
+             <p className="text-gray-500">{doctor.qualification || 'MBBS'} – {doctor.specialization || 'General Physician'}</p>
+             <span className="inline-block mt-1 px-3 py-1 text-sm bg-gray-200 rounded-full">
                {doctor.experiance || 0} Years Experience
              </span>
              <div className="mt-4">
-               <h3 className="font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-1">
-                 About <span className="text-sm text-gray-400 dark:text-gray-500">ℹ️</span>
+               <h3 className="font-semibold text-gray-700 flex items-center gap-1">
+                 About <span className="text-sm text-gray-400">ℹ️</span>
                </h3>
-               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+               <p className="text-sm text-gray-600 mt-1">
                <ul>
                    <li>Hospital/Clinic: {doctor.HospitalName || 'Not specified'}</li> 
                    <li>License Number: {doctor.licenceNo || 'Not specified'}</li> 
@@ -247,7 +246,7 @@ export default function BookDoctorProfile() {
                </ul>
                </p>
              </div>
-             <p className="mt-4 font-medium text-gray-800 dark:text-gray-200">
+             <p className="mt-4 font-medium text-gray-800">
                Appointment fee: <span className="font-bold">₹{doctor.fees || 0}</span>
              </p>
            </div>
@@ -255,7 +254,7 @@ export default function BookDoctorProfile() {
 
                  {/* Date Selector */}
          <div className="mt-10">
-           <h3 className="text-md font-semibold mb-2 text-gray-700 dark:text-gray-300">
+           <h3 className="text-md font-semibold mb-2 text-gray-700">
              Booking slots
            </h3>
            <div className="flex gap-2 overflow-x-auto">
@@ -265,7 +264,7 @@ export default function BookDoctorProfile() {
                  className={`flex flex-col items-center px-4 py-2 rounded-lg cursor-pointer ${
                    selectedDate === idx
                      ? "bg-blue-600 text-white"
-                     : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                     : "bg-gray-100 text-gray-700"
                  }`}
                  onClick={() => {
                    setSelectedDate(idx);

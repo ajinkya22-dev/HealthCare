@@ -62,6 +62,7 @@ export const appointmentAPI = {
     getMyAppointments: () => api.get('/appointments/my-appointments'),
     getMyPatientAppointments: () => api.get('/appointments/my-patient-appointments'),
     testPatientData: () => api.get('/appointments/test-patient-data'),
+    updateAppointmentStatus: (id, status) => api.patch(`/appointments/${id}/status`, { status }),
 };
 
 export const reviewAPI = {

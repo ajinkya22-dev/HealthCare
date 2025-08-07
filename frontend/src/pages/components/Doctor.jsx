@@ -153,18 +153,13 @@ export default function DoctorProfileCard() {
                   </div>
 
                   <div className="flex gap-3">
-                    <button 
+                    <button
                       onClick={() => navigate("/bookAppointment", { state: { doctor } })}
                       className="flex-1 bg-[#179fac] text-white px-4 py-2 rounded-full font-semibold shadow hover:bg-[#147c88] transition"
                     >
                       Book Appointment
                     </button>
-                    <button 
-                      onClick={() => navigate(`/doctor/${doctor._id}`)}
-                      className="px-4 py-2 border border-[#179fac] text-[#179fac] rounded-full hover:bg-[#179fac] hover:text-white transition"
-                    >
-                      View Profile
-                    </button>
+
                   </div>
                 </div>
               </div>

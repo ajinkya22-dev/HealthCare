@@ -16,9 +16,7 @@ const HeroSection = () => {
           <p className="text-gray-700 mb-8 max-w-md">
             At Our Hospital, We Are Dedicated To Providing Exceptional Medical Care To Our Patients And Their Families. Our Experienced Team Of Medical Professionals, Cutting-Edge Technology, And Compassionate Approach Make Us A Leader In The Healthcare Industry
           </p>
-          <button className="bg-teal-600 text-white cursor-pointer px-8 py-3 rounded font-semibold shadow hover:bg-teal-700 transition">
-            Appointments
-          </button>
+
         </div>
 
         {/* Right content */}
@@ -26,7 +24,7 @@ const HeroSection = () => {
           {/* Doctor Image */}
           <div className="  rounded-xl  relative  flex items-center justify-center">
             <img
-              src="src\assets\images\Screenshot 2025-07-29 173550.png"
+              src="src\assets\images\heroimage.jpg"
               alt="Doctor"
               className="w-100 h-120 object-cover rounded-lg shadow-lg"
             />

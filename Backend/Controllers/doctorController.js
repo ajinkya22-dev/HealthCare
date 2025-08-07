@@ -9,7 +9,7 @@ exports.getAllDoctors = async (req, res) => {
     try {
         console.log('Fetching all doctors...');
         const doctors = await Doctor.find()
-            .populate('userId', 'name email profileImage phoneNo gender address')
+            .populate('userId', 'name email phoneNo gender address')
             .select('-__v');
         
         console.log('Doctors found:', doctors.length);
@@ -19,7 +19,6 @@ exports.getAllDoctors = async (req, res) => {
                 _id: doctor._id,
                 userId: doctor.userId,
                 name: doctor.userId?.name,
-                profileImage: doctor.userId?.profileImage
             });
             
             return {
@@ -31,7 +30,6 @@ exports.getAllDoctors = async (req, res) => {
                 licenceNo: doctor.licenceNo,
                 HospitalName: doctor.hospitalName, // Fix field name
                 fees: doctor.fees,
-                profileImage: doctor.userId?.profileImage || null,
                 name: doctor.userId?.name || 'Unknown',
                 email: doctor.userId?.email || '',
                 phoneNo: doctor.userId?.phoneNo || '',
@@ -57,7 +55,7 @@ exports.getMyPatients = async (req, res) => {
         }
         
         const patients = await Patient.find({ doctor: doctor._id })
-            .populate('userId', 'name email profileImage phoneNo gender address');
+            .populate('userId', 'name email phoneNo gender address');
         
         const patientsWithUserData = patients.map(patient => ({
             _id: patient._id,
@@ -65,7 +63,6 @@ exports.getMyPatients = async (req, res) => {
                 _id: patient.userId?._id,
                 name: patient.userId?.name || 'Unknown',
                 email: patient.userId?.email || '',
-                profileImage: patient.userId?.profileImage || null,
                 phoneNo: patient.userId?.phoneNo || '',
                 gender: patient.userId?.gender || '',
                 address: patient.userId?.address || ''
@@ -94,29 +91,5 @@ exports.getMyReviews = async (req, res) => {
     } catch (error) {
         console.error('Error in getMyReviews:', error);
         res.status(500).json({ message: "Error fetching reviews", error: error.message });
-    }
-};
-
-// Upload profile image
-exports.uploadProfileImage = async (req, res) => {
-    try {
-        const doctor = await Doctor.findOne({ userId: req.user.id });
-        if (!doctor) {
-            return res.status(404).json({ message: "Doctor not found" });
-        }
-        
-        const imagePath = `uploads/doctor-profiles/${req.file.filename}`;
-        
-        // Update both doctor and user profile image
-        doctor.profileImage = imagePath;
-        await doctor.save();
-        
-        // Also update the user's profile image
-        await User.findByIdAndUpdate(req.user.id, { profileImage: imagePath });
-        
-        res.json({ message: "Profile image uploaded", path: imagePath });
-    } catch (error) {
-        console.error('Error in uploadProfileImage:', error);
-        res.status(500).json({ message: "Error uploading image", error: error.message });
     }
 };

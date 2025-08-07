@@ -5,16 +5,20 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import Sidebar from "./pages/Sidebar";
-import ThemeToggle from "./components/ThemeToggle";
+import { HiMenu, HiX } from 'react-icons/hi';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleSidebar = () => {
     setSidebarOpen((prev) => !prev);
+  };
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen((prev) => !prev);
   };
 
   useEffect(() => {
@@ -36,27 +40,25 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="bg-gray-100  py-4 navbar fixed top-0 left-0 w-full shadow-md z-50 transition-colors duration-200">
-      <div className="container mx-auto flex items-center justify-between">
+    <nav className="bg-gray-100 py-4 navbar fixed top-0 left-0 w-full shadow-md z-50 transition-colors duration-200">
+      <div className="container mx-auto flex items-center justify-between px-4">
         {/* Logo */}
         <div className="flex items-center">
           <Link to="/">
-            <span className="text-xl font-semibold text-[#2ca181] dark:text-[#4ade80] ml-25">
-              Medi
-              <span className="text-[#8bc34a] dark:text-[#22c55e]">Connect</span>
+            <span className="text-xl font-semibold text-[#2ca181] ml-0">
+              Medi<span className="text-[#8bc34a]">Connect</span>
             </span>
           </Link>
         </div>
-        
-        {/* Nav Links */}
-        <div className="flex items-center space-x-8 mx-15">
+        {/* Desktop Nav Links */}
+        <div className="hidden md:flex items-center space-x-8 mx-15">
           <NavLink
             to="/"
             className={({ isActive }) =>
               "py-2 px-3 font-semibold transition border-b-4" +
               (isActive
-                ? " border-green-500 text-green-600 dark:text-green-400"
-                : " border-transparent text-gray-800  hover:text-green-500 dark:hover:text-green-400")
+                ? " border-green-500 text-green-600"
+                : " border-transparent text-gray-800  hover:text-green-500")
             }
           >
             Home
@@ -66,8 +68,8 @@ const Navbar = () => {
             className={({ isActive }) =>
               "py-2 px-3 font-semibold transition border-b-4" +
               (isActive
-                ? " border-green-500 text-green-600 dark:text-green-400"
-                : " border-transparent text-gray-800  hover:text-green-500 dark:hover:text-green-400")
+                ? " border-green-500 text-green-600"
+                : " border-transparent text-gray-800  hover:text-green-500")
             }
           >
             Service
@@ -77,13 +79,12 @@ const Navbar = () => {
             className={({ isActive }) =>
               "py-2 px-3 font-semibold transition border-b-4" +
               (isActive
-                ? " border-green-500 text-green-600 dark:text-green-400"
-                : " border-transparent text-gray-800  hover:text-green-500 dark:hover:text-green-400")
+                ? " border-green-500 text-green-600"
+                : " border-transparent text-gray-800  hover:text-green-500")
             }
           >
             Contact Us
           </NavLink>
-
           {!isLoggedIn ? (
             <>
               <Link to="/register" className="text-green-600  hover:underline">
@@ -91,7 +92,7 @@ const Navbar = () => {
               </Link>
               <Link
                 to="/login"
-                className="bg-green-700 dark:bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800 dark:hover:bg-green-700 transition-colors"
+                className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition-colors"
               >
                 Log In
               </Link>
@@ -99,16 +100,77 @@ const Navbar = () => {
           ) : (
             <button
               onClick={toggleSidebar}
-              className="text-white px-4 py-2 rounded bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors"
+              className="text-white px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 transition-colors"
             >
               Profile
             </button>
           )}
-          
-          {/* Theme Toggle */}
-       
+        </div>
+        {/* Mobile Hamburger Icon */}
+        <div className="md:hidden flex items-center">
+          <button onClick={toggleMobileMenu} className="text-3xl text-[#179fac] focus:outline-none">
+            {mobileMenuOpen ? <HiX /> : <HiMenu />}
+          </button>
         </div>
       </div>
+      {/* Mobile Dropdown Menu */}
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white shadow-lg absolute top-full left-0 w-full z-50 animate-fade-in-down">
+          <div className="flex flex-col items-center py-4 space-y-2">
+            <NavLink
+              to="/"
+              className={({ isActive }) =>
+                "py-2 px-4 font-semibold w-full text-center" +
+                (isActive ? " text-green-600" : " text-gray-800 hover:text-green-500")
+              }
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </NavLink>
+            <NavLink
+              to="/service"
+              className={({ isActive }) =>
+                "py-2 px-4 font-semibold w-full text-center" +
+                (isActive ? " text-green-600" : " text-gray-800 hover:text-green-500")
+              }
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Service
+            </NavLink>
+            <NavLink
+              to="/contact"
+              className={({ isActive }) =>
+                "py-2 px-4 font-semibold w-full text-center" +
+                (isActive ? " text-green-600" : " text-gray-800 hover:text-green-500")
+              }
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Contact Us
+            </NavLink>
+            {!isLoggedIn ? (
+              <>
+                <Link to="/register" className="text-green-600 hover:underline w-full text-center" onClick={() => setMobileMenuOpen(false)}>
+                  Sign Up
+                </Link>
+                <Link
+                  to="/login"
+                  className="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition-colors w-full text-center"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Log In
+                </Link>
+              </>
+            ) : (
+              <button
+                onClick={() => { setMobileMenuOpen(false); toggleSidebar(); }}
+                className="text-white px-4 py-2 rounded bg-blue-500 hover:bg-blue-600 transition-colors w-full text-center"
+              >
+                Profile
+              </button>
+            )}
+          </div>
+        </div>
+      )}
       <Sidebar show={sidebarOpen} onClose={toggleSidebar} />
     </nav>
   );

@@ -185,3 +185,26 @@ exports.getMyAppointmentsForPatient = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+// PATCH: Update appointment status
+exports.updateAppointmentStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const allowedStatuses = ['scheduled', 'completed', 'cancelled'];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ message: 'Invalid status value' });
+    }
+    const appointment = await Appointment.findByIdAndUpdate(
+      id,
+      { status },
+      { new: true }
+    );
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+    res.status(200).json(appointment);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update appointment status', error: err.message });
+  }
+};
