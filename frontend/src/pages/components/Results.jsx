@@ -56,39 +56,39 @@ export default function ResultsInNumbers() {
 
   if (loading) {
     return (
-      <div className="bg-gray-50 rounded-lg py-9">
+      <div className="bg-gray-50 rounded-lg py-6 md:py-9 px-4">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#179fac] mx-auto"></div>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-50 rounded-lg py-9">
-      <h2 className="text-center text-[#179fac] font-semibold text-2xl mb-8">
+    <div className="bg-gray-50 rounded-lg py-6 md:py-9 px-4">
+      <h2 className="text-center text-[#179fac] font-semibold text-xl md:text-2xl mb-6 md:mb-8">
         Our results in numbers
       </h2>
-      <div className="flex gap-5 flex-wrap justify-around max-w-5xl mx-auto">
-        <div className="flex-1 min-w-[180px] text-center">
-          <div className="text-4xl text-[#179fac] font-bold">{stats.satisfaction}%</div>
-          <div className="text-base font-medium text-[#222] mt-2">
+      <div className="grid grid-cols-2 md:flex md:gap-5 md:flex-wrap md:justify-around max-w-5xl mx-auto">
+        <div className="flex-1 min-w-[140px] md:min-w-[180px] text-center mb-6 md:mb-0">
+          <div className="text-2xl md:text-4xl text-[#179fac] font-bold">{stats.satisfaction}%</div>
+          <div className="text-sm md:text-base font-medium text-[#222] mt-2">
             Customer satisfaction
           </div>
         </div>
-        <div className="flex-1 min-w-[180px] text-center">
-          <div className="text-4xl text-[#179fac] font-bold">{stats.doctors}</div>
-          <div className="text-base font-medium text-[#222] mt-2">
+        <div className="flex-1 min-w-[140px] md:min-w-[180px] text-center mb-6 md:mb-0">
+          <div className="text-2xl md:text-4xl text-[#179fac] font-bold">{stats.doctors}</div>
+          <div className="text-sm md:text-base font-medium text-[#222] mt-2">
             Expert Doctors
           </div>
         </div>
-        <div className="flex-1 min-w-[180px] text-center">
-          <div className="text-4xl text-[#179fac] font-bold">{stats.patients}</div>
-          <div className="text-base font-medium text-[#222] mt-2">
+        <div className="flex-1 min-w-[140px] md:min-w-[180px] text-center mb-6 md:mb-0">
+          <div className="text-2xl md:text-4xl text-[#179fac] font-bold">{stats.patients}</div>
+          <div className="text-sm md:text-base font-medium text-[#222] mt-2">
             Happy Patients
           </div>
         </div>
-        <div className="flex-1 min-w-[180px] text-center">
-          <div className="text-4xl text-[#179fac] font-bold">{stats.appointments}</div>
-          <div className="text-base font-medium text-[#222] mt-2">
+        <div className="flex-1 min-w-[140px] md:min-w-[180px] text-center">
+          <div className="text-2xl md:text-4xl text-[#179fac] font-bold">{stats.appointments}</div>
+          <div className="text-sm md:text-base font-medium text-[#222] mt-2">
             Appointments
           </div>
         </div>

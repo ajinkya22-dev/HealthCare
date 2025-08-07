@@ -48,13 +48,13 @@ export default function Login() {
         <img
           src="src/assets/images/login.png"
           alt="Doctor Placeholder"
-          className="object-cover w-full h-full max-h-[600px] rounded-l-2xl shadow-lg"
+          className="object-fill w-full h-full max-h-[600px] rounded-l-2xl shadow-lg "
           style={{ minHeight: '400px', minWidth: '300px' }}
         />
       </div>
       {/* Right: Login Form */}
       <div className="flex-1 flex items-center justify-center w-full">
-        <div className="bg-white p-10 rounded-2xl shadow-2xl w-full max-w-md">
+        <div className="bg-white p-10 rounded-2xl shadow-2xl w-full h-3xl max-w-2xl z-50">
           <h2 className="text-3xl font-bold text-center mb-6">Welcome Back!</h2>
           {error && (
             <div className="mb-4 text-center text-red-600 font-semibold bg-red-100 border border-red-300 rounded p-2">
@@ -64,13 +64,13 @@ export default function Login() {
           <div className="flex justify-center mb-8 gap-2">
             <button
               onClick={() => setActiveTab("patient")}
-              className={`px-6 py-2 rounded-l-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "patient" ? "bg-gray-100 text-teal-600 shadow" : "bg-white text-gray-500 border"}`}
+              className={`px-6 py-2 cursor-pointer rounded-l-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "patient" ? "bg-gray-100 text-teal-600 shadow" : "bg-white text-gray-500 border"}`}
             >
               Login as <span className="text-teal-600">Patient</span>
             </button>
             <button
               onClick={() => setActiveTab("doctor")}
-              className={`px-6 py-2 rounded-r-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "doctor" ? "bg-teal-500 text-white shadow" : "bg-white text-gray-500 border"}`}
+              className={`px-6 py-2 cursor-pointer rounded-r-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "doctor" ? "bg-teal-500 text-white shadow" : "bg-white text-gray-500 border"}`}
             >
               Login as Doctor
             </button>
@@ -96,14 +96,14 @@ export default function Login() {
                 className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400 text-lg"
               />
             </div>
-            <div className="flex items-center text-sm">
+            <div className="flex items-center text-sm cursor-pointer">
               <input required type="checkbox" className="mr-2" />
               Remember me
             </div>
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-teal-400 to-blue-500 text-white py-3 rounded-lg font-bold text-lg shadow-md hover:from-teal-500 hover:to-blue-600 transition disabled:bg-gray-400"
+              className="w-full cursor-pointer bg-gradient-to-r from-teal-400 to-blue-500 text-white py-3 rounded-lg font-bold text-lg shadow-md hover:from-teal-500 hover:to-blue-600 transition disabled:bg-gray-400"
             >
               {loading ? "Signing In..." : "Sign In"}
             </button>

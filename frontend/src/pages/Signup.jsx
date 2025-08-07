@@ -86,13 +86,13 @@ export default function Register() {
         <div className="flex justify-center mb-6 gap-2 w-full">
           <button
             onClick={() => setUserType("patient")}
-            className={`px-6 py-2 rounded-l-lg font-semibold shadow-sm transition-all duration-200 ${userType === "patient" ? "bg-gray-100 text-teal-600 shadow" : "bg-white text-gray-500 border"}`}
+            className={`px-6 py-2 cursor-pointer rounded-l-lg font-semibold shadow-sm transition-all duration-200 ${userType === "patient" ? "bg-gray-100 text-teal-600 shadow" : "bg-white text-gray-500 border"}`}
           >
             Patient
           </button>
           <button
             onClick={() => setUserType("doctor")}
-            className={`px-6 py-2 rounded-r-lg font-semibold shadow-sm transition-all duration-200 ${userType === "doctor" ? "bg-teal-500 text-white shadow" : "bg-white text-gray-500 border"}`}
+            className={`px-6 py-2 cursor-pointer rounded-r-lg font-semibold shadow-sm transition-all duration-200 ${userType === "doctor" ? "bg-teal-500 text-white shadow" : "bg-white text-gray-500 border"}`}
           >
             Doctor
           </button>
