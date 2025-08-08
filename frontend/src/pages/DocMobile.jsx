@@ -58,7 +58,7 @@ export default function DoctormobileDashobaord() {
       {/* Sidebar */}
       <div className="w-full md:w-20 bg-teal-700 p-4 md:p-8 flex md:flex-col items-center justify-between md:justify-start space-y-0 md:space-y-6 md:gap-5">
         <Link to="/login">
-          <img className="h-6 w-6 md:h-5 md:w-5 cursor-pointer" src="src/assets/images/icons8-logout-50.png" alt="Logout" />
+                          <img className="h-6 w-6 md:h-5 md:w-5 cursor-pointer" src="/src/assets/images/icons8-logout-50.png" alt="Logout" />
         </Link>
       </div>
 

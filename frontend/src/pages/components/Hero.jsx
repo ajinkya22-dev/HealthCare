@@ -24,7 +24,7 @@ const HeroSection = () => {
           {/* Doctor Image */}
           <div className="rounded-xl relative flex items-center justify-center">
             <img
-              src="src\assets\images\heroimage.jpg"
+                              src="/src/assets/images/heroimage.jpg"
               alt="Doctor"
               className=" w-full md:w-100 h-auto md:h-120 object-cover rounded-lg shadow-lg"
             />

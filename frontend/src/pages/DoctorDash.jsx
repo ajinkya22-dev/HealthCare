@@ -164,7 +164,7 @@ export default function DoctorDashboard() {
           <button onClick={handleLogout}>
             <img 
               className="h-5 w-5 cursor-pointer" 
-              src="src/assets/images/icons8-logout-50.png" 
+                              src="/src/assets/images/icons8-logout-50.png" 
               alt="Logout" 
             />
           </button>

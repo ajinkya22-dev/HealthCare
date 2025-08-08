@@ -43,7 +43,7 @@ const Contact = () => {
       <div>
         <img
           className="w-full h-180"
-          src="src\assets\images\29a183e94cfaa1c70f9923b9dff53e831733a031.jpg"
+                          src="/src/assets/images/29a183e94cfaa1c70f9923b9dff53e831733a031.jpg"
           alt=""
           srcset=""
         />

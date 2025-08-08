@@ -75,7 +75,7 @@ export default function Register() {
     <div className="min-h-screen w-full flex items-center justify-center relative overflow-hidden">
       {/* Fullscreen blurred background image with less blur */}
       <img
-        src="src/assets/images/register.png"
+                        src="/src/assets/images/register.png"
         alt="Register Background"
         className="absolute inset-0 w-full h-full object-cover blur-[2px] scale-105 z-0"
         style={{ minHeight: '100vh' }}
