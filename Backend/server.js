@@ -47,7 +47,7 @@ const app = express();
 // ...existing code...
 const allowedOrigins = [
     'http://localhost:5174',
-    'https://mediconnect22.vercel.app/',
+    'https://mediconnect22.vercel.app',
     'https://healthcare-two-inky-55.vercel.app'
 ];
 
