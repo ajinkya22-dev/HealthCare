@@ -40,9 +40,16 @@ createUploadDirectories();
 
 const app = express();
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:5173', 'http://localhost:5176', 'http://localhost:5174'],
+    origin: [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'http://localhost:5176',
+        'http://localhost:5174',
+        'https://health-care-sand-three.vercel.app' // ✅ add your Vercel URL
+    ],
     credentials: true
 }));
+
 
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
