@@ -39,43 +39,38 @@ const createUploadDirectories = () => {
         console.log('Created patient-profiles directory');
     }
 };
-
 createUploadDirectories();
 
 // Initialize app
 const app = express();
 
-// ✅ Allowed origins
+// ...existing code...
 const allowedOrigins = [
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'http://localhost:5176',
     'http://localhost:5174',
     'https://health-care-sand-three.vercel.app',
-    'https://healthcare-two-inky-55.vercel.app' // your prod frontend
+    'https://healthcare-two-inky-55.vercel.app'
 ];
 
-// ✅ Apply CORS globally before anything else
 app.use(cors({
-    origin: (origin, callback) => {
+    origin: function (origin, callback) {
         if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
-            callback(new Error('CORS blocked'));
+            callback(new Error('Not allowed by CORS'));
         }
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true
 }));
+// ...existing code...
 
-// ✅ Handle preflight requests for all routes
+// ✅ Handle preflight requests
 app.options('*', cors());
 
 // Middleware
 app.use(express.json());
 
-// Static uploads folder
-app.use('/uploads', express.static('uploads'));
+// Static uploads folder (with CORS)
+app.use('/uploads', cors({ origin: allowedOrigins, credentials: true }), express.static('uploads'));
 
 // Routes
 app.use('/api/auth', authRoutes);
