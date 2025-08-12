@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authAPI } from "../services/api";
-
+import loginPhoto from "../assets/images/login.png"
 // If image is inside /public folder, no need to import.
 // If it's inside src/assets, import it:
 // import bgImage from "../assets/69596c0b-65b7-4804-8bf7-3dbf28948268.jpg";
@@ -46,7 +46,7 @@ export default function Login() {
       {/* Left: Doctor Image */}
       <div className="hidden md:flex flex-1 items-center justify-center bg-white h-full">
         <img
-                          src="/src/assets/images/login.png"
+                          src={loginPhoto}
           alt="Doctor Placeholder"
           className="object-fill w-full h-full max-h-[600px] rounded-l-2xl shadow-lg "
           style={{ minHeight: '400px', minWidth: '300px' }}
