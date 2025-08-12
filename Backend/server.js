@@ -39,17 +39,26 @@ const createUploadDirectories = () => {
 createUploadDirectories();
 
 const app = express();
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://localhost:5176',
+    'http://localhost:5174',
+    'https://health-care-sand-three.vercel.app',
+    'https://healthcare-two-inky-55.vercel.app' // ✅ Your actual Vercel URL
+];
+
 app.use(cors({
-    origin: [
-        'http://localhost:3000',
-        'http://localhost:5173',
-        'http://localhost:5176',
-        'http://localhost:5174',
-        'https://health-care-sand-three.vercel.app' // ✅ add your Vercel URL
-    ],
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('CORS blocked'));
+        }
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // ✅ allow all needed methods
     credentials: true
 }));
-
 
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
