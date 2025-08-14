@@ -1,21 +1,28 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { authAPI } from "../services/api";
-import loginPhoto from "../assets/images/login.png"
-// If image is inside /public folder, no need to import.
-// If it's inside src/assets, import it:
-// import bgImage from "../assets/69596c0b-65b7-4804-8bf7-3dbf28948268.jpg";
+import DoctorInstrumentsBackground from "./components/ui/doctorInstrumentsBackground.jsx";
 
 export default function Login() {
   const [activeTab, setActiveTab] = useState("patient");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [remember, setRemember] = useState(false);
+  const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handlesubmit = async (e) => {
     e.preventDefault();
+
+    // Mark all fields as touched
+    setTouched({ email: true, password: true, remember: true });
+
+    if (!email || !password || !remember) {
+      return; // Don't submit if required fields are empty
+    }
+
     setLoading(true);
     setError("");
     try {
@@ -31,91 +38,116 @@ export default function Login() {
       }
     } catch (err) {
       console.error(err);
-      if (err.response?.data?.message) {
-        setError(err.response.data.message);
-      } else {
-        setError("Login failed. Try again.");
-      }
+      setError(err.response?.data?.message || "Login failed. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row items-center justify-center bg-gray-50">
-      {/* Left: Doctor Image */}
-      <div className="hidden md:flex flex-1 items-center justify-center bg-white h-full">
-        <img
-                          src={loginPhoto}
-          alt="Doctor Placeholder"
-          className="object-fill w-full h-full max-h-[600px] rounded-l-2xl shadow-lg "
-          style={{ minHeight: '400px', minWidth: '300px' }}
-        />
-      </div>
-      {/* Right: Login Form */}
-      <div className="flex-1 flex items-center justify-center w-full">
-        <div className="bg-white p-10 rounded-2xl shadow-2xl w-full h-3xl max-w-2xl z-50">
-          <h2 className="text-3xl font-bold text-center mb-6">Welcome Back!</h2>
+      <DoctorInstrumentsBackground>
+        <div className="p-12 rounded-2xl shadow-2xl w-full max-w-3xl
+                      bg-gray-800/40 backdrop-blur-lg border border-white/20
+                      text-white">
+          <h2 className="text-4xl font-bold text-center mb-8">Welcome Back!</h2>
+
           {error && (
-            <div className="mb-4 text-center text-red-600 font-semibold bg-red-100 border border-red-300 rounded p-2">
-              {error}
-            </div>
+              <div className="mb-4 text-center text-red-200 font-semibold
+                          bg-red-500/30 border border-red-400 rounded p-2">
+                {error}
+              </div>
           )}
+
           <div className="flex justify-center mb-8 gap-2">
             <button
-              onClick={() => setActiveTab("patient")}
-              className={`px-6 py-2 cursor-pointer rounded-l-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "patient" ? "bg-gray-100 text-teal-600 shadow" : "bg-white text-gray-500 border"}`}
+                onClick={() => setActiveTab("patient")}
+                className={`px-8 py-3 rounded-l-lg font-semibold shadow-sm transition-all duration-200 ${
+                    activeTab === "patient"
+                        ? "bg-white/30 text-teal-200 shadow"
+                        : "bg-transparent text-gray-200 border border-white/40"
+                }`}
             >
-              Login as <span className="text-teal-600">Patient</span>
+              Patient
             </button>
             <button
-              onClick={() => setActiveTab("doctor")}
-              className={`px-6 py-2 cursor-pointer rounded-r-lg font-semibold shadow-sm transition-all duration-200 ${activeTab === "doctor" ? "bg-teal-500 text-white shadow" : "bg-white text-gray-500 border"}`}
+                onClick={() => setActiveTab("doctor")}
+                className={`px-8 py-3 rounded-r-lg font-semibold shadow-sm transition-all duration-200 ${
+                    activeTab === "doctor"
+                        ? "bg-teal-500/60 text-white shadow"
+                        : "bg-transparent text-gray-200 border border-white/40"
+                }`}
             >
-              Login as Doctor
+              Doctor
             </button>
           </div>
-          <form onSubmit={handlesubmit} className="space-y-5">
-            <div>
-              <input
-                required
+
+          <form onSubmit={handlesubmit} className="space-y-6" noValidate>
+            <input
                 value={email}
                 onChange={(e) => setemail(e.target.value)}
+                onBlur={() => setTouched((prev) => ({ ...prev, email: true }))}
                 type="text"
                 placeholder="Email"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400 text-lg"
-              />
-            </div>
-            <div>
-              <input
-                required
+                className={`w-full border rounded-lg px-4 py-3
+                       focus:outline-none focus:ring-2 focus:ring-teal-300
+                       text-lg bg-transparent placeholder-white/70 text-white
+                       ${
+                    touched.email && !email
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-white/40"
+                }`}
+            />
+
+            <input
                 value={password}
                 onChange={(e) => setpassword(e.target.value)}
+                onBlur={() => setTouched((prev) => ({ ...prev, password: true }))}
                 type="password"
                 placeholder="Password"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-teal-400 text-lg"
+                className={`w-full border rounded-lg px-4 py-3
+                       focus:outline-none focus:ring-2 focus:ring-teal-300
+                       text-lg bg-transparent placeholder-white/70 text-white
+                       ${
+                    touched.password && !password
+                        ? "border-red-500 focus:ring-red-500"
+                        : "border-white/40"
+                }`}
+            />
+
+            <div
+                className={`flex items-center text-sm cursor-pointer ${
+                    touched.remember && !remember ? "text-red-400" : "text-white"
+                }`}
+            >
+              <input
+                  type="checkbox"
+                  checked={remember}
+                  onChange={(e) => setRemember(e.target.checked)}
+                  onBlur={() => setTouched((prev) => ({ ...prev, remember: true }))}
+                  className="mr-2"
               />
-            </div>
-            <div className="flex items-center text-sm cursor-pointer">
-              <input required type="checkbox" className="mr-2" />
               Remember me
             </div>
+
             <button
-              type="submit"
-              disabled={loading}
-              className="w-full cursor-pointer bg-gradient-to-r from-teal-400 to-blue-500 text-white py-3 rounded-lg font-bold text-lg shadow-md hover:from-teal-500 hover:to-blue-600 transition disabled:bg-gray-400"
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-teal-400 to-blue-500
+                       text-white py-4 rounded-lg font-bold text-lg shadow-md
+                       hover:from-teal-500 hover:to-blue-600 transition
+                       disabled:bg-gray-400"
             >
               {loading ? "Signing In..." : "Sign In"}
             </button>
           </form>
-          <p className="text-center text-sm mt-6">
-            Don't have an account?{' '}
-            <a href="/register" className="text-teal-600 hover:underline font-semibold">
+
+          <p className="text-center text-sm mt-6 text-white/90">
+            Don't have an account?{" "}
+            <a href="/register" className="text-teal-200 hover:underline font-semibold">
               Register here
             </a>
           </p>
         </div>
-      </div>
-    </div>
+      </DoctorInstrumentsBackground>
   );
 }

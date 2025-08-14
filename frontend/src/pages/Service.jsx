@@ -2,6 +2,8 @@ import React from "react";
 import Navbar from "../Navbar";
 import Faq from "./components/Faq";
 import Footer from "../Footer";
+import securityImage from "../assets/images/security.jpg";
+import DoctorInstrumentsBackground from "./components/ui/doctorInstrumentsBackground.jsx";
 
 export default function Service() {
     return (
@@ -10,28 +12,31 @@ export default function Service() {
             <Navbar />
 
             {/* Hero Section */}
-            <div
-                className="w-full h-[85vh] bg-cover mt-15 bg-center flex flex-col justify-center items-start px-10 md:px-28"
-                style={{
-                    opacity: 1,
-                    backgroundImage: `url('/src/assets/images/register.png')`,
-                }}
-            >
-                <h1 className="text-white mt-50 text-4xl md:text-5xl font-bold mb-4">
-                    Your Health, <br /> Our Priority
-                </h1>
-                <p className="text-white text-lg mb-6 max-w-xl">
-                    Caring for you with compassion, technology, and trust
-                </p>
-                <div className="flex space-x-4">
-                    <a
-                        href="https://en.wikipedia.org/wiki/Apollo_Hospitals"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="border border-white text-white px-5 py-2 rounded-full font-semibold hover:bg-white hover:text-teal-700"
-                    >
-                        Learn More
-                    </a>
+            <div className="relative w-full h-[85vh] flex flex-col justify-center items-start px-10 md:px-28 overflow-hidden">
+
+                {/* Background moving icons */}
+                <div className="absolute inset-0 z-0">
+                    <DoctorInstrumentsBackground />
+                </div>
+
+                {/* Foreground content */}
+                <div className="relative z-10">
+                    <h1 className="text-white text-4xl md:text-5xl font-bold mb-4">
+                        Your Health, <br /> Our Priority
+                    </h1>
+                    <p className="text-white text-lg mb-6 max-w-xl">
+                        Caring for you with compassion, technology, and trust
+                    </p>
+                    <div className="flex space-x-4">
+                        <a
+                            href="https://en.wikipedia.org/wiki/Apollo_Hospitals"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="border border-white text-white px-5 py-2 rounded-full font-semibold hover:bg-white hover:text-teal-700"
+                        >
+                            Learn More
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -40,7 +45,7 @@ export default function Service() {
                 {/* Image */}
                 <div className="md:w-1/2 w-full mb-8 md:mb-0">
                     <img
-                        src="/src/assets/images/security.jpg" // Replace with your actual image path
+                        src={securityImage}
                         alt="Data Security"
                         className="w-full h-auto rounded-lg shadow-md"
                     />
