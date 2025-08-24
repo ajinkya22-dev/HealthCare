@@ -44,33 +44,33 @@ createUploadDirectories();
 // Initialize app
 const app = express();
 
-// ...existing code...
-const allowedOrigins = [
-    'http://localhost:5174',
-    'https://mediconnect22.vercel.app',
-    'https://healthcare-two-inky-55.vercel.app'
-];
-
+// ✅ Allow CORS from any host
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps, curl)
+        if (!origin) return callback(null, true);
+        return callback(null, true); // Allow all origins
     },
     credentials: true
 }));
-// ...existing code...
 
-// ✅ Handle preflight requests
-app.options('*', cors());
+// ✅ Handle preflight requests for all routes
+app.options('*', cors({
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        return callback(null, true);
+    },
+    credentials: true
+}));
 
 // Middleware
 app.use(express.json());
 
-// Static uploads folder (with CORS)
-app.use('/uploads', cors({ origin: allowedOrigins, credentials: true }), express.static('uploads'));
+// Static uploads folder (still public)
+app.use('/uploads', cors({
+    origin: (origin, callback) => callback(null, true),
+    credentials: true
+}), express.static('uploads'));
 
 // Routes
 app.use('/api/auth', authRoutes);
